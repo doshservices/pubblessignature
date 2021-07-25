@@ -184,6 +184,14 @@ class User {
     const user = await UserSchema.findByIdAndRemove(this.data);
     return user;
   }
-}
+
+  //get user wallet
+  async getUserWallet() {
+    return await Wallet.findOne({ userId: this.data }).orFail(() =>
+      throwError("User Not Found", 404)
+    );
+  }
+
+  }
 
 module.exports = User;

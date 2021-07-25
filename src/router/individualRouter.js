@@ -66,4 +66,40 @@ individualRoute
     individualController.createApartmentIndividual
   );
 
+// get individual wallet
+individualRoute
+  .route("/individuals/wallet")
+  .get(
+    authenticate,
+    permit([USER_TYPE.INDIVIDUAL]),
+    individualController.getIndividualWallet
+  );
+
+// get individual apartments
+individualRoute
+  .route("/individuals/apartments")
+  .get(
+    authenticate,
+    permit([USER_TYPE.INDIVIDUAL]),
+    individualController.getIndividualApartment
+  );
+
+// get apartment by id
+individualRoute
+  .route("/individuals/apartments/:id")
+  .get(
+    authenticate,
+    permit([USER_TYPE.INDIVIDUAL]),
+    individualController.getIndividualApartmentById
+  );
+
+// delete apartment by id
+individualRoute
+  .route("/individuals/apartments/:id")
+  .delete(
+    authenticate,
+    permit([USER_TYPE.INDIVIDUAL]),
+    individualController.deleteIndividualApartment
+  );
+
 module.exports = individualRoute;

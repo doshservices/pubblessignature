@@ -246,6 +246,33 @@ class Host {
     await newApartment.save();
     return newApartment;
   }
+
+  // get host wallet
+  async getHostWallet() {
+    const wallet = await Wallet.findOne({ userId: this.data });
+    return wallet;
+  }
+
+  // get host apartments
+  async getHostApartments() {
+    const apartment = await ApartmentSchema.find({ userId: this.data });
+    return apartment;
+  }
+
+  // get apartments by id
+  async getApartmentById() {
+    const id = this.data;
+    const apartment = await ApartmentSchema.findById(id);
+    return apartment;
+  }
+
+  // delete apartment
+  async deleteApartment() {
+    const apartment = await ApartmentSchema.findByIdAndRemove({
+      _id: this.data,
+    });
+    return apartment;
+  }
 }
 
 module.exports = Host;

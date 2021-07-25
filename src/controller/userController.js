@@ -123,3 +123,14 @@ exports.resetPassword = (req, res) => {
     )
     .catch((err) => error(res, { code: err.code, message: err.message }));
 };
+
+// get user wallet 
+exports.getUserWallet = async (req, res) => { 
+  try {
+    const user = await new User(req.user._id).getUserWallet();
+    return success(res, { user });
+  } catch (err) {
+    logger.error("Unable to complete request", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+}

@@ -8,12 +8,8 @@ userRoute
   .route("/users")
   .post(userController.signup)
   .get(authenticate, permit([USER_TYPE.USER]), userController.getUserProfile)
-  .put(
-    authenticate,
-    permit([USER_TYPE.USER]),
-    userController.updateUserDetails
-  )
-  .delete(authenticate, permit([USER_TYPE.USER]), userController.deleteUser)
+  .put(authenticate, permit([USER_TYPE.USER]), userController.updateUserDetails)
+  .delete(authenticate, permit([USER_TYPE.USER]), userController.deleteUser);
 
 userRoute
   .route("/users/all")
@@ -36,5 +32,10 @@ userRoute
     upload.imageUpload.any(),
     userController.uploadProfileImage
   );
+
+// get user wallet
+userRoute
+  .route("/users/wallet")
+  .get(authenticate, permit([USER_TYPE.USER]), userController.getUserWallet);
 
 module.exports = userRoute;

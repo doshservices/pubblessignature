@@ -250,6 +250,34 @@ class Individual {
     await newApartment.save();
     return newApartment;
   }
+
+  // get individual wallet
+  async getIndividualWallet() {
+    const wallet = await Wallet.findOne({ userId: this.data });
+    return wallet ? wallet : throwError("Wallet Not Found", 404);
+  }
+
+  // get individual apartment
+  async getIndividualApartment() {
+    const apartment = await ApartmentSchema.find({ userId: this.data });
+    return apartment ? apartment : throwError("Apartment Not Found", 404);
+  }
+
+  // get single apartment by id
+  async getSingleApartmentById() {
+    const apartment = await ApartmentSchema.findById(this.data);
+    return apartment ? apartment : throwError("Apartment Not Found", 404);
+  }
+
+  // delete individual apartment
+  async deleteIndividualApartment() {
+    const id  = this.data;
+    const apartment = await ApartmentSchema.findByIdAndRemove({ _id: id });
+    if (!apartment) {
+      throwError("Apartment Not Found", 404);
+    }
+    return apartment;
+  }
 }
 
 module.exports = Individual;

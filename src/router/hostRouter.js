@@ -49,4 +49,33 @@ hostRoute
     upload.manyImageUpload.array("picture", 10),
     hostController.createApartment
   );
+
+// get host wallet
+hostRoute
+  .route("/hosts/wallet")
+  .get(authenticate, permit([USER_TYPE.HOST]), hostController.getHostWallet);
+
+// get host apartments
+hostRoute
+  .route("/hosts/apartments")
+  .get(
+    authenticate,
+    permit([USER_TYPE.HOST]),
+    hostController.getHostApartments
+  );
+
+// get apartments by id
+hostRoute
+  .route("/hosts/apartments/:id")
+  .get(authenticate, permit([USER_TYPE.HOST]), hostController.getApartmentById);
+
+// delete apartment by id
+hostRoute
+  .route("/hosts/apartments/:id")
+  .delete(
+    authenticate,
+    permit([USER_TYPE.HOST]),
+    hostController.deleteApartment
+  );
+
 module.exports = hostRoute;

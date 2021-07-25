@@ -153,3 +153,54 @@ exports.createApartmentIndividual = async (req, res) => {
     return error(res, { code: err.code, message: err.message });
   }
 };
+
+//get individual wallet
+exports.getIndividualWallet = async (req, res) => {
+  try {
+    const individual = await new Individual(req.user._id).getIndividualWallet();
+    return success(res, { individual });
+  } catch (err) {
+    logger.error("Unable to complete host update request", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
+
+// get individual apartments
+exports.getIndividualApartment = async (req, res) => {
+  try {
+    const individual = await new Individual(
+      req.user._id
+    ).getIndividualApartment();
+    return success(res, { individual });
+  } catch (err) {
+    logger.error("Unable to complete host update request", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
+
+// get apartment by id
+exports.getIndividualApartmentById = async (req, res) => {
+  try {
+    const individual = await new Individual(
+      req.params.id
+    ).getSingleApartmentById();
+    return success(res, { individual });
+  } catch (err) {
+    logger.error("Unable to complete host update request", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
+
+// delete apartment
+exports.deleteIndividualApartment = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const individual = await new Individual({
+      id,
+    }).deleteIndividualApartment();
+    return success(res, { individual });
+  } catch (err) {
+    logger.error("Unable to complete host update request", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
