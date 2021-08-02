@@ -1,11 +1,11 @@
-require('dotenv').config();
+require("dotenv").config();
 
 module.exports = {
   MONGODB_URI: process.env.MONGODB_URI,
   MONGODB_TEST_URI: process.env.MONGODB_TEST_URI,
   JWT_SECRETE_KEY: process.env.JWT_SECRETE_KEY,
   PORT: process.env.PORT || 7000,
-  TOKEN_DURATION: process.env.TOKEN_DURATION || '720h',
+  TOKEN_DURATION: process.env.TOKEN_DURATION || "720h",
   UPLOAD_TIMEOUT: process.env.UPLOAD_TIMEOUT,
   CONNECTION_TIMEOUT: process.env.CONNECTION_TIMEOUT,
   FILE_SIZE: process.env.FILE_SIZE,
@@ -24,4 +24,6 @@ module.exports = {
   TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
   TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER,
+  REDIS_PORT: process.env.REDIS_PORT,
+  OTP_DURATION: process.env.OTP_DURATION,
 };
