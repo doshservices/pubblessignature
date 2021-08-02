@@ -271,11 +271,54 @@ class Individual {
 
   // delete individual apartment
   async deleteIndividualApartment() {
-    const id  = this.data;
+    const id = this.data;
     const apartment = await ApartmentSchema.findByIdAndRemove({ _id: id });
     if (!apartment) {
       throwError("Apartment Not Found", 404);
     }
+    return apartment;
+  }
+
+  // update apartment by id and update images
+  async updateApartmentById() {
+    const { id, data, files } = this.data;
+    let pictureFiles = files;
+    if (!pictureFiles) throwError("No picture attached");
+    //map through images and create a promise array using cloudinary upload function
+    let multiplePicturePromise = pictureFiles.map((picture) =>
+      cloudinary.v2.uploader.upload(picture.path)
+    );
+    let imageResponses = await Promise.all(multiplePicturePromise);
+    // map image responses to array and return urls
+    let imageUrls = imageResponses.map((response) => response.url);
+    const updateApartment = await ApartmentSchema.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          apartmentImages: imageUrls,
+          apartmentName: data.apartmentName,
+          address: data.address,
+          apartmentCountry: data.apartmentCountry,
+          apartmentState: data.apartmentState,
+          price: data.price,
+          typeOfApartment: data.typeOfApartment,
+          ammenities: data.ammenities,
+          bathroom: data.bathroom,
+        },
+      },
+      { new: true }
+    );
+    return updateApartment;
+  }
+
+  // user can make apartment not available
+  async makeApartmentNotAvailable() {
+    const { id, userId } = this.data;
+    const apartment = await ApartmentSchema.findByIdAndUpdate(
+      { _id: id, userId },
+      { $set: { isAvailable: false } },
+      { new: true }
+    );
     return apartment;
   }
 }

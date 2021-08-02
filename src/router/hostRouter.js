@@ -78,4 +78,23 @@ hostRoute
     hostController.deleteApartment
   );
 
+// update apartment by id
+hostRoute
+  .route("/hosts/apartments/:id")
+  .put(
+    authenticate,
+    permit([USER_TYPE.HOST]),
+    upload.manyImageUpload.array("picture", 10),
+    hostController.updateApartmentById
+  );
+
+// host can make apartment not available
+hostRoute
+  .route("/hosts/apartments/:id/available")
+  .get(
+    authenticate,
+    permit([USER_TYPE.HOST]),
+    hostController.makeApartmentNotAvailable
+  );
+
 module.exports = hostRoute;

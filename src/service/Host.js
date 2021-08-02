@@ -273,6 +273,51 @@ class Host {
     });
     return apartment;
   }
+
+  // update apartment by id and update images
+  async updateApartmentById() {
+    const { _id, data, files } = this.data;
+    let pictureFiles = files;
+    if (!pictureFiles) throwError("No picture attached");
+    //map through images and create a promise array using cloudinary upload function
+    let multiplePicturePromise = pictureFiles.map((picture) =>
+      cloudinary.v2.uploader.upload(picture.path)
+    );
+    let imageResponses = await Promise.all(multiplePicturePromise);
+    // map image responses to array and return urls
+    let imageUrls = imageResponses.map((response) => response.url);
+    const updateApartment = await ApartmentSchema.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          apartmentImages: imageUrls,
+          apartmentName: data.apartmentName,
+          address: data.address,
+          apartmentCountry: data.apartmentCountry,
+          apartmentState: data.apartmentState,
+          price: data.price,
+          typeOfApartment: data.typeOfApartment,
+          ammenities: data.ammenities,
+          bathroom: data.bathroom,
+        },
+      },
+      { new: true }
+    );
+    return updateApartment;
+  }
+
+  // host can make apartment not available
+  async makeApartmentNotAvailable() {
+    const { id, userId } = this.data;
+    const updateApartment = await ApartmentSchema.findByIdAndUpdate(
+      { _id: id,
+        userId,
+       },
+      { $set: { isAvailable: false } },
+      { new: true }
+    );
+    return updateApartment;
+  }
 }
 
 module.exports = Host;

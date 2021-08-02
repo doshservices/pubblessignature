@@ -124,8 +124,8 @@ exports.resetPassword = (req, res) => {
     .catch((err) => error(res, { code: err.code, message: err.message }));
 };
 
-// get user wallet 
-exports.getUserWallet = async (req, res) => { 
+// get user wallet
+exports.getUserWallet = async (req, res) => {
   try {
     const user = await new User(req.user._id).getUserWallet();
     return success(res, { user });
@@ -133,4 +133,15 @@ exports.getUserWallet = async (req, res) => {
     logger.error("Unable to complete request", err);
     return error(res, { code: err.code, message: err.message });
   }
-}
+};
+
+// get all active apartments
+exports.getActiveApartment = async (req, res) => {
+  try {
+    const apartments = await new User().getActiveApartment();
+    return success(res, { apartments });
+  } catch (err) {
+    logger.error("Unable to complete request", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};

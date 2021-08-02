@@ -6,6 +6,7 @@ const cloud = require("../utils/cloudinaryConfig");
 const { validateParameters } = require("../utils/util");
 const { getCachedData } = require("../service/Redis");
 const Wallet = require("../models/wallet");
+const ApartmentSchema = require("../models/apartmentModel");
 const {
   sendResetPasswordToken,
   SuccessfulPasswordReset,
@@ -192,6 +193,14 @@ class User {
     );
   }
 
+  // user can see all active and available apartments
+  async getActiveApartment() {
+    const apartments = await ApartmentSchema.find({
+      isAvailable: true,
+      isActive: true,
+    });
+    return apartments;
   }
+}
 
 module.exports = User;

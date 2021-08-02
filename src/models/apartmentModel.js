@@ -43,6 +43,14 @@ const apartmentSchema = new Schema({
     type: Array,
     required: true,
   },
+  isActive: {
+    type: Boolean,
+    default: false,
+  },
+  isAvailable: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 apartmentSchema.plugin(uniqueValidator, { message: "{TYPE} must be unique." });

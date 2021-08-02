@@ -38,4 +38,13 @@ userRoute
   .route("/users/wallet")
   .get(authenticate, permit([USER_TYPE.USER]), userController.getUserWallet);
 
+// get all active apartments
+userRoute
+  .route("/users/apartments")
+  .get(
+    authenticate,
+    permit([USER_TYPE.USER]),
+    userController.getActiveApartment
+  );
+
 module.exports = userRoute;

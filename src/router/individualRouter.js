@@ -102,4 +102,23 @@ individualRoute
     individualController.deleteIndividualApartment
   );
 
+// update apartment by id
+individualRoute
+  .route("/individuals/apartments/:id")
+  .put(
+    authenticate,
+    permit([USER_TYPE.INDIVIDUAL]),
+    upload.manyImageUpload.array("picture", 10),
+    individualController.updateApartmentById
+  );
+
+// individual can make apartment not available
+individualRoute
+  .route("/individuals/apartments/:id/available")
+  .get(
+    authenticate,
+    permit([USER_TYPE.INDIVIDUAL]),
+    individualController.makeApartmentNotAvailable
+  );
+
 module.exports = individualRoute;

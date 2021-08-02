@@ -191,6 +191,20 @@ exports.getIndividualApartmentById = async (req, res) => {
   }
 };
 
+// update apartment by id
+exports.updateApartmentById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = req.body;
+    const files = req.files;
+    const apartment = await new Individual({ id, data, files }).updateApartmentById();
+    return success(res, { apartment });
+  } catch (err) {
+    logger.error("Unable to complete host update request", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
+
 // delete apartment
 exports.deleteIndividualApartment = async (req, res) => {
   try {
@@ -204,3 +218,19 @@ exports.deleteIndividualApartment = async (req, res) => {
     return error(res, { code: err.code, message: err.message });
   }
 };
+
+// individual can make apartment not available
+exports.makeApartmentNotAvailable = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const userId = req.user._id;
+    const individual = await new Individual({
+      id,
+      userId,
+    }).makeApartmentNotAvailable();
+    return success(res, { individual });
+  } catch (err) {
+    logger.error("Unable to complete host update request", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+}
