@@ -50,15 +50,17 @@ class Individual {
 
   async signup() {
     const otp = this.data.otp;
+    if (this.data.googleSigned === "false") {
     if (!otp) {
-      throwError("OTP Required To Complete Signup");
+    throwError("OTP Required To Complete Signup");
     }
     const cachedOTP = await getCachedData(this.data.email);
     if (!cachedOTP) {
-      throwError("OTP Code Expired");
+    throwError("OTP Code Expired");
     } else if (cachedOTP !== otp) {
-      throwError("Invalid OTP");
+    throwError("Invalid OTP");
     }
+  }
     const individual = new IndividualSchema(this.data);
     let validationError = individual.validateSync();
     if (validationError) {
@@ -72,9 +74,17 @@ class Individual {
     if (this.errors.length) {
       throwError(this.errors);
     }
-    const newIndividual = await individual.save();
-    await new Wallet({ userId: newIndividual._id }).save();
-    return newIndividual;
+    let attempt = {
+      imageName: this.data.orignalname,
+      imageUrl: this.data.path,
+    };
+    cloud.uploads(attempt.imageUrl).then(async (result) => {
+      const imageUrl = result.url;
+      individual.validID = imageUrl;
+      const newIndividual = await individual.save();
+      await new Wallet({ userId: newIndividual._id }).save();
+    });
+    return individual;
   }
 
   async login() {
@@ -157,24 +167,24 @@ class Individual {
     );
     return updateIndividual;
   }
-  async uploadValidID() {
-    const { originalname, individualId, path } = this.data;
-    let attempt = {
-      imageName: originalname,
-      imageUrl: path,
-    };
-    cloud.uploads(attempt.imageUrl).then(async (result) => {
-      const imageUrl = result.url;
-      const individual = await IndividualSchema.findByIdAndUpdate(
-        { _id: individualId },
-        { $set: { validID: imageUrl } },
-        {
-          new: true,
-        }
-      );
-      return individual;
-    });
-  }
+  // async uploadValidID() {
+    // const { originalname, individualId, path } = this.data;
+    // let attempt = {
+      // imageName: originalname,
+      // imageUrl: path,
+    // };
+    // cloud.uploads(attempt.imageUrl).then(async (result) => {
+      // const imageUrl = result.url;
+      // const individual = await IndividualSchema.findByIdAndUpdate(
+        // { _id: individualId },
+        // { $set: { validID: imageUrl } },
+        // {
+          // new: true,
+        // }
+      // );
+      // return individual;
+    // });
+  // }
 
   async uploadProfileImage() {
     const { originalname, individualId, path } = this.data;

@@ -49,14 +49,16 @@ class User {
 
   async signup() {
     const otp = this.data.otp;
-    if (!otp) {
-      throwError("OTP Required To Complete Signup");
-    }
-    const cachedOTP = await getCachedData(this.data.email);
-    if (!cachedOTP) {
-      throwError("OTP Code Expired");
-    } else if (cachedOTP !== otp) {
-      throwError("Invalid OTP");
+    if (this.data.googleSigned === "false") {
+      if (!otp) {
+        throwError("OTP Required To Complete Signup");
+      }
+      const cachedOTP = await getCachedData(this.data.email);
+      if (!cachedOTP) {
+        throwError("OTP Code Expired");
+      } else if (cachedOTP !== otp) {
+        throwError("Invalid OTP");
+      }
     }
     const user = new UserSchema(this.data);
     let validationError = user.validateSync();

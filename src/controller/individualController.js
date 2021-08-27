@@ -6,6 +6,8 @@ const Individual = require("../service/Individual");
 
 exports.signup = async (req, res) => {
   try {
+    req.body["path"] = req.files[0].path;
+    req.body["originalname"] = req.files[0].originalname;
     const newIndividual = await new Individual(req.body).signup();
     const token = await generateAuthToken({
       userId: newIndividual._id,

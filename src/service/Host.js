@@ -1,5 +1,7 @@
 const cloudinary = require("cloudinary");
 const HostSchema = require("../models/hostModel");
+const UserSchema = require("../models/userModel");
+const IndividualSchema = require("../models/individualModel");
 const ApartmentSchema = require("../models/apartmentModel");
 const { throwError } = require("../utils/handleErrors");
 const bcrypt = require("bcrypt");
@@ -55,14 +57,16 @@ class Host {
 
   async signup() {
     const otp = this.data.otp;
-    if (!otp) {
-      throwError("OTP Required To Complete Signup");
-    }
-    const cachedOTP = await getCachedData(this.data.email);
-    if (!cachedOTP) {
-      throwError("OTP Code Expired");
-    } else if (cachedOTP !== otp) {
-      throwError("Invalid OTP");
+    if (this.data.googleSigned === "false") {
+      if (!otp) {
+        throwError("OTP Required To Complete Signup");
+      }
+      const cachedOTP = await getCachedData(this.data.email);
+      if (!cachedOTP) {
+        throwError("OTP Code Expired");
+      } else if (cachedOTP !== otp) {
+        throwError("Invalid OTP");
+      }
     }
     const host = new HostSchema(this.data);
     let validationError = host.validateSync();
@@ -77,9 +81,17 @@ class Host {
     if (this.errors.length) {
       throwError(this.errors);
     }
-    const newHost = await host.save();
-    await new Wallet({ userId: newHost._id }).save();
-    return newHost;
+    let attempt = {
+      imageName: this.data.orignalname,
+      imageUrl: this.data.path,
+    };
+    cloud.uploads(attempt.imageUrl).then(async (result) => {
+      const imageUrl = result.url;
+      host.CACDocument = imageUrl;
+      const newHost = await host.save();
+      await new Wallet({ userId: newHost._id }).save();
+    });
+    return host;
   }
 
   async login() {
@@ -159,24 +171,24 @@ class Host {
     return updateHost;
   }
 
-  async uploadCACDocument() {
-    const { originalname, hostId, path } = this.data;
-    let attempt = {
-      imageName: originalname,
-      imageUrl: path,
-    };
-    cloud.uploads(attempt.imageUrl).then(async (result) => {
-      const imageUrl = result.url;
-      const host = await HostSchema.findByIdAndUpdate(
-        { _id: hostId },
-        { $set: { CACDocument: imageUrl } },
-        {
-          new: true,
-        }
-      );
-      return host;
-    });
-  }
+  // async uploadCACDocument() {
+  // const { originalname, hostId, path } = this.data;
+  // let attempt = {
+  // imageName: originalname,
+  // imageUrl: path,
+  // };
+  // cloud.uploads(attempt.imageUrl).then(async (result) => {
+  // const imageUrl = result.url;
+  // const host = await HostSchema.findByIdAndUpdate(
+  // { _id: hostId },
+  // { $set: { CACDocument: imageUrl } },
+  // {
+  // new: true,
+  // }
+  // );
+  // return host;
+  // });
+  // }
 
   async uploadProfileImage() {
     const { originalname, hostId, path } = this.data;
@@ -310,9 +322,7 @@ class Host {
   async makeApartmentNotAvailable() {
     const { id, userId } = this.data;
     const updateApartment = await ApartmentSchema.findByIdAndUpdate(
-      { _id: id,
-        userId,
-       },
+      { _id: id, userId },
       { $set: { isAvailable: false } },
       { new: true }
     );

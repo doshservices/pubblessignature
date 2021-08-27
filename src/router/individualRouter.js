@@ -6,7 +6,7 @@ const upload = require("../core/multer");
 
 individualRoute
   .route("/individuals")
-  .post(individualController.signup)
+  .post(upload.imageUpload.any(), individualController.signup)
   .get(
     authenticate,
     permit([USER_TYPE.INDIVIDUAL]),

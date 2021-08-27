@@ -5,6 +5,8 @@ const uniqueValidator = require("mongoose-unique-validator");
 const { throwError } = require("../utils/handleErrors");
 const { USER_TYPE } = require("../utils/constants");
 const { SUPPORTED_PHONE_FORMAT } = require("../core/config");
+const IndividualModel = require("../models/individualModel");
+const UserModel = require("../models/userModel");
 
 const hostSchema = new Schema(
   {
@@ -63,6 +65,10 @@ const hostSchema = new Schema(
     },
     image: {
       type: String,
+    },
+    googleSigned: {
+      type: Boolean,
+      required: true,
     },
   },
   {

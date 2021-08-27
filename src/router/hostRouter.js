@@ -6,7 +6,7 @@ const upload = require("../core/multer");
 
 hostRoute
   .route("/hosts")
-  .post(hostController.signup)
+  .post(upload.imageUpload.any(), hostController.signup)
   .get(authenticate, permit([USER_TYPE.HOST]), hostController.getHostProfile)
   .put(authenticate, permit([USER_TYPE.HOST]), hostController.updateHostDetails)
   .delete(authenticate, permit([USER_TYPE.HOST]), hostController.deleteHost);

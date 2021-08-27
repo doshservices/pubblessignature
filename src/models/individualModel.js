@@ -66,6 +66,9 @@ const individualSchema = new Schema(
       type: String,
       default: USER_TYPE.INDIVIDUAL,
     },
+    googleSigned: {
+      type: Boolean,
+    },
   },
   {
     timestamps: true,

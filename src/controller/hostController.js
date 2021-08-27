@@ -7,6 +7,8 @@ const Host = require("../service/Host");
 
 exports.signup = async (req, res) => {
   try {
+    req.body["path"] = req.files[0].path;
+    req.body["originalname"] = req.files[0].originalname;
     const newHost = await new Host(req.body).signup();
     const token = await generateAuthToken({
       userId: newHost._id,

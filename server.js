@@ -13,6 +13,7 @@ const baseRouter = require("./src/router");
 const hostRouter = require("./src/router/hostRouter");
 const individualRouter = require("./src/router/individualRouter");
 const userRouter = require("./src/router/userRouter");
+const eventRouter = require("./src/router/eventRouter");
 
 // App Init
 const app = express();
@@ -28,6 +29,7 @@ app.use("/", baseRouter);
 app.use("/api", hostRouter);
 app.use("/api", individualRouter);
 app.use("/api", userRouter);
+app.use("/api", eventRouter);
 
 app.listen(PORT, () =>
   logger.info(`Booking Backend Service Started on port ${PORT}`)
