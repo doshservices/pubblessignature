@@ -197,6 +197,7 @@ async function sendEmailVerificationToken(email) {
       message: `OTP Message sent to ${email} successfully`,
       data: "success",
       status: 200,
+      code: verificationCode1,
     };
   } catch (error) {
     logger.error("Error occurred sending token", error);
