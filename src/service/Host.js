@@ -171,24 +171,24 @@ class Host {
     return updateHost;
   }
 
-  // async uploadCACDocument() {
-  // const { originalname, hostId, path } = this.data;
-  // let attempt = {
-  // imageName: originalname,
-  // imageUrl: path,
-  // };
-  // cloud.uploads(attempt.imageUrl).then(async (result) => {
-  // const imageUrl = result.url;
-  // const host = await HostSchema.findByIdAndUpdate(
-  // { _id: hostId },
-  // { $set: { CACDocument: imageUrl } },
-  // {
-  // new: true,
-  // }
-  // );
-  // return host;
-  // });
-  // }
+  async uploadCACDocument() {
+    const { originalname, hostId, path } = this.data;
+    let attempt = {
+      imageName: originalname,
+      imageUrl: path,
+    };
+    cloud.uploads(attempt.imageUrl).then(async (result) => {
+      const imageUrl = result.url;
+      const host = await HostSchema.findByIdAndUpdate(
+        { _id: hostId },
+        { $set: { CACDocument: imageUrl } },
+        {
+          new: true,
+        }
+      );
+      return host;
+    });
+  }
 
   async uploadProfileImage() {
     const { originalname, hostId, path } = this.data;

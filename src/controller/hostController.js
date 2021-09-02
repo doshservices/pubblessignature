@@ -12,6 +12,7 @@ exports.signup = async (req, res) => {
     const newHost = await new Host(req.body).signup();
     const token = await generateAuthToken({
       userId: newHost._id,
+      isVerified: hostDetails.verified,
       isActive: newHost.isActive,
       userType: newHost.role,
     });

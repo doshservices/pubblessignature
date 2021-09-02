@@ -11,6 +11,7 @@ exports.signup = async (req, res) => {
     const newIndividual = await new Individual(req.body).signup();
     const token = await generateAuthToken({
       userId: newIndividual._id,
+      isVerified: newIndividual.verified,
       isActive: newIndividual.isActive,
       userType: newIndividual.role,
     });
@@ -28,6 +29,7 @@ exports.login = async (req, res) => {
     const token = await generateAuthToken({
       userId: individualDetails._id,
       isActive: individualDetails.isActive,
+      isVerified: individualDetails.verified,
       userType: individualDetails.role,
     });
     return success(res, { individualDetails, token });
@@ -199,7 +201,11 @@ exports.updateApartmentById = async (req, res) => {
     const id = req.params.id;
     const data = req.body;
     const files = req.files;
-    const apartment = await new Individual({ id, data, files }).updateApartmentById();
+    const apartment = await new Individual({
+      id,
+      data,
+      files,
+    }).updateApartmentById();
     return success(res, { apartment });
   } catch (err) {
     logger.error("Unable to complete host update request", err);
@@ -235,4 +241,4 @@ exports.makeApartmentNotAvailable = async (req, res) => {
     logger.error("Unable to complete host update request", err);
     return error(res, { code: err.code, message: err.message });
   }
-}
+};

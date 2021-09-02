@@ -26,7 +26,6 @@ exports.login = async (req, res) => {
     const userDetails = await new User(req.body).login();
     const token = await generateAuthToken({
       userId: userDetails._id,
-      isVerified: userDetails.verified,
       isActive: userDetails.isActive,
       userType: USER_TYPE.USER,
     });

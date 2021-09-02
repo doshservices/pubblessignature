@@ -167,24 +167,24 @@ class Individual {
     );
     return updateIndividual;
   }
-  // async uploadValidID() {
-    // const { originalname, individualId, path } = this.data;
-    // let attempt = {
-      // imageName: originalname,
-      // imageUrl: path,
-    // };
-    // cloud.uploads(attempt.imageUrl).then(async (result) => {
-      // const imageUrl = result.url;
-      // const individual = await IndividualSchema.findByIdAndUpdate(
-        // { _id: individualId },
-        // { $set: { validID: imageUrl } },
-        // {
-          // new: true,
-        // }
-      // );
-      // return individual;
-    // });
-  // }
+  async uploadValidID() {
+    const { originalname, individualId, path } = this.data;
+    let attempt = {
+      imageName: originalname,
+      imageUrl: path,
+    };
+    cloud.uploads(attempt.imageUrl).then(async (result) => {
+      const imageUrl = result.url;
+      const individual = await IndividualSchema.findByIdAndUpdate(
+        { _id: individualId },
+        { $set: { validID: imageUrl } },
+        {
+          new: true,
+        }
+      );
+      return individual;
+    });
+  }
 
   async uploadProfileImage() {
     const { originalname, individualId, path } = this.data;

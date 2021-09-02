@@ -50,6 +50,10 @@ const individualSchema = new Schema(
     validID: {
       type: String,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
     password: {
       type: String,
       required: true,

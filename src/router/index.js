@@ -9,8 +9,8 @@ baseRoute.get("/", (req, res) =>
     )
 );
 
-baseRoute.post("/api/send-token/:email", (req, res) => {
-  return sendEmailVerificationToken(req.params.email)
+baseRoute.post("/api/send-token", (req, res) => {
+  return sendEmailVerificationToken(req.body.email)
     .then((response) => res.status(response.status).json(response))
     .catch((error) => res.status(error.status).json(error));
 });
