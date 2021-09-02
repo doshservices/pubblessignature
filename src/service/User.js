@@ -105,7 +105,14 @@ class User {
   async updateUserDetails() {
     const { newDetails, oldDetails } = this.data;
     const updates = Object.keys(newDetails);
-    const allowedUpdates = ["firstName", "lastName", "email", "phoneNumber"];
+    const allowedUpdates = [
+      "firstName",
+      "lastName",
+      "phoneNumber",
+      "state",
+      "country",
+      "city",
+    ];
     return await util.performUpdate(
       updates,
       newDetails,

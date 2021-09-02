@@ -120,7 +120,7 @@ class Host {
   async updateHostDetails() {
     const { newDetails, oldDetails } = this.data;
     const updates = Object.keys(newDetails);
-    const allowedUpdates = ["email", "phoneNumber"];
+    const allowedUpdates = ["companyName", "phoneNumber", "companyAddress"];
     return await util.performUpdate(
       updates,
       newDetails,

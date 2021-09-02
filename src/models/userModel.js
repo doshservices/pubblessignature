@@ -66,6 +66,15 @@ const userSchema = new Schema(
     googleSigned: {
       type: Boolean,
     },
+    state: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
   },
   {
     timestamps: true,
