@@ -3,9 +3,10 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 const apartmentSchema = new Schema({
   userId: {
-    type: String,
-    index: true,
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
+    index: true,
   },
   apartmentName: {
     type: String,
@@ -31,25 +32,24 @@ const apartmentSchema = new Schema({
     type: String,
     required: true,
   },
-  ammenities: {
+  facilities: {
     type: Array,
   },
-  bathroom: {
+  apartmentInfo: {
     type: String,
-    enum: ["AVAILABLE", "NOT AVAILABLE"],
-    default: "AVAILABLE",
+    required: true,
   },
   apartmentImages: {
     type: Array,
     required: true,
   },
-  isActive: {
-    type: Boolean,
-    default: false,
-  },
   isAvailable: {
     type: Boolean,
     default: true,
+  },
+  numberOfRooms: {
+    type: Number,
+    required: true,
   },
 });
 

@@ -1,14 +1,9 @@
 const {
   SENDGRID_API_KEY,
   VERIFIED_EMAIL,
-  SENDGRID_TEMPLATEID,
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
-  TWILIO_PHONE_NUMBER,
 } = require("../core/config");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(SENDGRID_API_KEY);
-const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const { logger } = require("../utils/logger");
 const { cacheData } = require("../service/Redis");
 
@@ -209,35 +204,12 @@ async function sendEmailVerificationToken(email) {
   }
 }
 
-async function sendSms(phoneNumber) {
-  try {
-    await client.messages.create({
-      body: `Your Kampe verification code is: ${verificationCode}`,
-      from: TWILIO_PHONE_NUMBER,
-      to: phoneNumber,
-    });
-    return {
-      message: `OTP Message sent to ${phoneNumber} successfully`,
-      data: verificationCode,
-      status: 200,
-    };
-  } catch (error) {
-    logger.error("Error occurred sending token", error);
-    return {
-      message: `Error occurred sending OTP Message to ${phoneNumber}`,
-      data: error.message,
-      status: 500,
-    };
-  }
-}
-
 module.exports = {
   sendEmailVerificationToken,
   passwordEmail,
   SuccessfulPasswordReset,
   deleteAccountEmail,
   registrationSuccessful,
-  sendSms,
   sendResetPasswordToken,
   verificationCode,
 };

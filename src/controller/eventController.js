@@ -5,12 +5,10 @@ const Event = require("../service/Event");
 // create event
 exports.createEvent = async (req, res) => {
   try {
-    const data = req.body;
-    const files = req.files;
-    await new Event({ files, data }).createEvent();
+    await new Event(req.body).createEvent();
     return success(res, { message: "Event Created Successfully" });
   } catch (err) {
-    logger.error("Unable to complete host update request", err);
+    logger.error("Unable to create event", err);
     return error(res, { code: err.code, message: err.message });
   }
 };
@@ -18,8 +16,7 @@ exports.createEvent = async (req, res) => {
 // get event
 exports.getEventById = async (req, res) => {
   try {
-    const id = req.params.id;
-    const event = await new Event(id).getEventById();
+    const event = await new Event(req.params.id).getEventById();
     return success(res, { event });
   } catch (err) {
     logger.error("Unable to complete event request", err);
@@ -41,8 +38,7 @@ exports.getAllEvents = async (req, res) => {
 // get event by location
 exports.getEventByLocation = async (req, res) => {
   try {
-    const location = req.params.location;
-    const events = await new Event(location).getEventByLocation();
+    const events = await new Event(req.params.location).getEventByLocation();
     return success(res, events);
   } catch (err) {
     logger.error("Unable to complete event request", err);
@@ -67,8 +63,7 @@ exports.updateEventById = async (req, res) => {
 // delete event by id
 exports.deleteEventById = async (req, res) => {
   try {
-    const id = req.params._id;
-    await new Event(id).deleteEventById();
+    await new Event(req.params.id).deleteEventById();
     return success(res, { message: "Event Deleted Successfully" });
   } catch (err) {
     logger.error("Unable to complete event delete request", err);

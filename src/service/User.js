@@ -2,7 +2,6 @@ const UserSchema = require("../models/userModel");
 const { throwError } = require("../utils/handleErrors");
 const bcrypt = require("bcrypt");
 const util = require("../utils/util");
-const cloud = require("../utils/cloudinaryConfig");
 const { validateParameters } = require("../utils/util");
 const { getCachedData } = require("../service/Redis");
 const Wallet = require("../models/wallet");
@@ -11,6 +10,7 @@ const {
   sendResetPasswordToken,
   SuccessfulPasswordReset,
 } = require("../utils/sendgrid");
+const { USER_TYPE } = require("../utils/constants");
 
 class User {
   constructor(data) {
@@ -49,6 +49,13 @@ class User {
 
   async signup() {
     const otp = this.data.otp;
+    const { isValid, messages } = validateParameters(
+      ["phoneNumber", "email", "password"],
+      this.data
+    );
+    if (!isValid) {
+      throwError(messages);
+    }
     if (this.data.googleSigned === "false") {
       if (!otp) {
         throwError("OTP Required To Complete Signup");
@@ -60,20 +67,14 @@ class User {
         throwError("Invalid OTP");
       }
     }
-    const user = new UserSchema(this.data);
-    let validationError = user.validateSync();
-    if (validationError) {
-      Object.values(validationError.errors).forEach((e) => {
-        if (e.reason) this.errors.push(e.reason.message);
-        else this.errors.push(e.message.replace("Path ", ""));
-      });
-      throwError(this.errors);
-    }
     await Promise.all([this.emailExist(), this.phoneNumberExist()]);
     if (this.errors.length) {
       throwError(this.errors);
     }
-    const newUser = await user.save();
+    if (this.data.role === USER_TYPE.USER) {
+      this.data.isVerified = true;
+    }
+    const newUser = await new UserSchema(this.data).save();
     await new Wallet({ userId: newUser._id }).save();
     return newUser;
   }
@@ -93,25 +94,35 @@ class User {
   }
 
   static async getAllUser() {
-    const users = await UserSchema.find();
-    return users ? users : throwError("No Individual Found", 404);
+    return await UserSchema.find()
+      .sort({ createdAt: -1 })
+      .orFail(() => throwError("No event found"));
   }
 
   async userProfile() {
-    const user = await UserSchema.findById(this.data);
-    return user ? user : throwError("User Not Found", 404);
+    return await UserSchema.findById(this.data).orFail(() =>
+      throwError("No user found")
+    );
   }
 
   async updateUserDetails() {
     const { newDetails, oldDetails } = this.data;
     const updates = Object.keys(newDetails);
     const allowedUpdates = [
-      "firstName",
-      "lastName",
+      "fullName",
+      "email",
       "phoneNumber",
       "state",
       "country",
       "city",
+      "gender",
+      "companyName",
+      "companyAddress",
+      "profilePicture",
+      "validId",
+      "cacDocument",
+      "businessName",
+      "businessAddress",
     ];
     return await util.performUpdate(
       updates,
@@ -137,11 +148,19 @@ class User {
     if (!updateUser) {
       throwError("Invalid Email");
     }
-    await sendResetPasswordToken(
-      updateUser.email,
-      updateUser.firstName,
-      updateUser.token
-    );
+    if (updateUser.role === USER_TYPE.BUSINESS) {
+      await sendResetPasswordToken(
+        updateUser.email,
+        updateUser.businessName,
+        updateUser.token
+      );
+    } else {
+      await sendResetPasswordToken(
+        updateUser.email,
+        updateUser.fullName,
+        updateUser.token
+      );
+    }
     return updateUser;
   }
 
@@ -163,25 +182,6 @@ class User {
     }
     await SuccessfulPasswordReset(updateUser.firstName, updateUser.email);
     return updateUser;
-  }
-
-  async uploadProfileImage() {
-    const { originalname, userId, path } = this.data;
-    let attempt = {
-      imageName: originalname,
-      imageUrl: path,
-    };
-    cloud.uploads(attempt.imageUrl).then(async (result) => {
-      const imageUrl = result.url;
-      const user = await UserSchema.findByIdAndUpdate(
-        { _id: userId },
-        { $set: { image: imageUrl } },
-        {
-          new: true,
-        }
-      );
-      return user;
-    });
   }
 
   //delete a user from the database

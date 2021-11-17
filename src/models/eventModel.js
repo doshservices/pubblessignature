@@ -10,10 +10,6 @@ const eventSchema = new Schema({
     type: String,
     required: true,
   },
-  eventLocation: {
-    type: String,
-    required: true,
-  },
   eventCost: {
     type: Number,
     required: true,
@@ -34,13 +30,17 @@ const eventSchema = new Schema({
     type: Array,
     required: true,
   },
-  isActive: {
-    type: Boolean,
-    default: false,
-  },
   isAvailable: {
     type: Boolean,
     default: true,
+  },
+  eventDate: {
+    type: String,
+    required: true,
+  },
+  eventTime: {
+    type: String,
+    required: true,
   },
 });
 

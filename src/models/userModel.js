@@ -4,21 +4,14 @@ const validator = require("validator");
 const uniqueValidator = require("mongoose-unique-validator");
 const { throwError } = require("../utils/handleErrors");
 const { GENDER, USER_TYPE } = require("../utils/constants");
-const { SUPPORTED_PHONE_FORMAT } = require("../core/config");
 
 const userSchema = new Schema(
   {
-    firstName: {
+    fullName: {
       type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
     },
     gender: {
       type: String,
-      required: true,
       enum: Object.keys(GENDER),
     },
     email: {
@@ -37,14 +30,14 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      validate(value) {
-        if (!validator.isMobilePhone(value, SUPPORTED_PHONE_FORMAT)) {
-          throw new Error("Invalid Phone Number!");
-        }
-        return validator.isMobilePhone(value);
-      },
     },
-    image: {
+    companyName: {
+      type: String,
+    },
+    companyAddress: {
+      type: String,
+    },
+    profilePicture: {
       type: String,
     },
     password: {
@@ -52,7 +45,13 @@ const userSchema = new Schema(
       required: true,
       minlength: 6,
     },
-    isActive: {
+    validId: {
+      type: String,
+    },
+    cacDocument: {
+      type: String,
+    },
+    isVerified: {
       type: Boolean,
       default: false,
     },
@@ -61,7 +60,7 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      default: USER_TYPE.USER,
+      required: true,
     },
     googleSigned: {
       type: Boolean,

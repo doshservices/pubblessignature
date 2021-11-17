@@ -10,8 +10,7 @@ const { PORT } = require("./src/core/config");
 
 // Routers
 const baseRouter = require("./src/router");
-const hostRouter = require("./src/router/hostRouter");
-const individualRouter = require("./src/router/individualRouter");
+const apartmentRouter = require("./src/router/apartmentRouter");
 const userRouter = require("./src/router/userRouter");
 const eventRouter = require("./src/router/eventRouter");
 
@@ -26,8 +25,7 @@ app.use(morgan("tiny"));
 
 // Router Middleware
 app.use("/", baseRouter);
-app.use("/api", hostRouter);
-app.use("/api", individualRouter);
+app.use("/api", apartmentRouter);
 app.use("/api", userRouter);
 app.use("/api", eventRouter);
 

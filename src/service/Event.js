@@ -1,8 +1,4 @@
-const cloudinary = require("cloudinary");
 const { throwError } = require("../utils/handleErrors");
-const bcrypt = require("bcrypt");
-const util = require("../utils/util");
-const cloud = require("../utils/cloudinaryConfig");
 const { validateParameters } = require("../utils/util");
 const EventSchema = require("../models/eventModel");
 
@@ -13,89 +9,56 @@ class Event {
   }
 
   async createEvent() {
-    const { data, files } = this.data;
-    let pictureFiles = files;
-    if (!pictureFiles) throwError("No picture attached");
-    //map through images and create a promise array using cloudinary upload function
-    let multiplePicturePromise = pictureFiles.map((picture) =>
-      cloudinary.v2.uploader.upload(picture.path)
+    const { isValid, messages } = validateParameters(
+      [
+        "eventName",
+        "description",
+        "eventLocation",
+        "eventCost",
+        "eventCountry",
+        "eventState",
+        "eventDate",
+        "eventTime",
+        "eventImages",
+      ],
+      this.data
     );
-    let imageResponses = await Promise.all(multiplePicturePromise);
-    // map image responses to array and return urls
-    let imageUrls = imageResponses.map((response) => response.url);
-    const {
-      eventName,
-      description,
-      eventCountry,
-      eventState,
-      eventCost,
-      eventLocation,
-    } = data;
-    const newEvent = new EventSchema({
-      eventName,
-      description,
-      eventCountry,
-      eventState,
-      eventCost,
-      eventLocation,
-      eventImages: imageUrls,
-    });
-    await newEvent.save();
-    return newEvent;
+    if (!isValid) {
+      throwError(messages);
+    }
+    return await new EventSchema(parameters).save();
   }
   // get all events
   async getAllEvents() {
-    const events = await EventSchema.find({});
-    return events;
+    return await EventSchema.find()
+      .sort({ createdAt: -1 })
+      .orFail(() => throwError("No events found"));
   }
 
   // get event by id
   async getEventById() {
-    const id = this.data;
-    const event = await EventSchema.findById(id);
-    return event;
+    return await EventSchema.findById(this.data).orFail(() =>
+      throwError("No event found")
+    );
   }
 
   // get event by location
   async getEventByLocation() {
-    const location = this.data;
-    const events = await EventSchema.find({ eventLocation: location });
-    return events;
+    return await EventSchema.find({ eventLocation: this.data }).orFail(() =>
+      throwError("No event found")
+    );
   }
 
   // update event by id with images
   async updateEventById() {
-    const { id, data, files } = this.data;
-    let pictureFiles = files;
-    if (!pictureFiles) throwError("No picture attached");
-    //map through images and create a promise array using cloudinary uplo
-    let multiplePicturePromise = pictureFiles.map((picture) =>
-      cloudinary.v2.uploader.upload(picture.path)
-    );
-    let imageResponses = await Promise.all(multiplePicturePromise);
-    // map image responses to array and return urls
-    let imageUrls = imageResponses.map((response) => response.url);
-    const updateEvent = await EventSchema.findByIdAndUpdate(
-      { _id: id },
-      {
-        $set: {
-          eventImages: imageUrls,
-          eventName: data.eventName,
-          eventLocation: data.eventLocation,
-          eventCountry: data.eventCountry,
-          eventState: data.eventState,
-          eventCost: data.eventCost,
-        },
-      },
-      { new: true }
-    );
     return updateEvent;
   }
 
   // delete event by id
   async deleteEventById() {
-    const event = await EventSchema.findByIdAndRemove({ _id: this.data });
-    return event;
+    return await EventSchema.findByIdAndRemove(this.data).orFail(() =>
+      throwError("No event found")
+    );
   }
 }
 

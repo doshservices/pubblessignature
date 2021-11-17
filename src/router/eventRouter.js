@@ -1,45 +1,30 @@
 const eventRoute = require("../core/routerConfig");
 const eventController = require("../controller/eventController");
 const { authenticate, permit } = require("../core/userAuth");
-const { ADMIN_ROLES, USER_TYPE } = require("../utils/constants");
-const upload = require("../core/multer");
+const { ADMIN_ROLES } = require("../utils/constants");
 
 // create event
 eventRoute
   .route("/events/create-event")
-  .post(
-    authenticate,
-    permit([USER_TYPE.HOST]),
-    upload.manyImageUpload.array("picture", 10),
-    eventController.createEvent
-  );
+  .post(authenticate, permit([ADMIN_ROLES.ADMIN]), eventController.createEvent);
 
 // get event by id
-eventRoute
-  .route("/events/:id")
-  .get(authenticate, permit([USER_TYPE.HOST]), eventController.getEventById);
+eventRoute.route("/events/:id").get(authenticate, eventController.getEventById);
 
 // get all events
-eventRoute
-  .route("/events")
-  .get(authenticate, permit([USER_TYPE.HOST]), eventController.getAllEvents);
+eventRoute.route("/events").get(authenticate, eventController.getAllEvents);
 
 // get event by location
 eventRoute
-  .route("/events/location")
-  .get(
-    authenticate,
-    permit([USER_TYPE.HOST]),
-    eventController.getEventByLocation
-  );
+  .route("/events/location/:location")
+  .get(authenticate, eventController.getEventByLocation);
 
 // update event by id
 eventRoute
   .route("/events/:id")
   .put(
     authenticate,
-    permit([USER_TYPE.HOST]),
-    upload.manyImageUpload.array("picture", 10),
+    permit([ADMIN_ROLES.ADMIN]),
     eventController.updateEventById
   );
 
@@ -48,7 +33,7 @@ eventRoute
   .route("/events/:eventId")
   .delete(
     authenticate,
-    permit([USER_TYPE.HOST]),
+    permit([ADMIN_ROLES.ADMIN]),
     eventController.deleteEventById
   );
 

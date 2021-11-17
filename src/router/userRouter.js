@@ -7,9 +7,9 @@ const upload = require("../core/multer");
 userRoute
   .route("/users")
   .post(userController.signup)
-  .get(authenticate, permit([USER_TYPE.USER]), userController.getUserProfile)
-  .put(authenticate, permit([USER_TYPE.USER]), userController.updateUserDetails)
-  .delete(authenticate, permit([USER_TYPE.USER]), userController.deleteUser);
+  .get(authenticate, userController.getUserProfile)
+  .put(authenticate, userController.updateUserDetails)
+  .delete(authenticate, userController.deleteUser);
 
 userRoute
   .route("/users/all")
@@ -36,15 +36,11 @@ userRoute
 // get user wallet
 userRoute
   .route("/users/wallet")
-  .get(authenticate, permit([USER_TYPE.USER]), userController.getUserWallet);
+  .get(authenticate, userController.getUserWallet);
 
 // get all active apartments
 userRoute
   .route("/users/apartments")
-  .get(
-    authenticate,
-    permit([USER_TYPE.USER]),
-    userController.getActiveApartment
-  );
+  .get(authenticate, userController.getActiveApartment);
 
 module.exports = userRoute;

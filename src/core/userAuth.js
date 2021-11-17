@@ -1,42 +1,44 @@
-const jwt = require('jsonwebtoken');
-const Host = require('../models/hostModel');
-const Individual = require('../models/individualModel');
-const User = require('../models/userModel');
-const { JWT_SECRETE_KEY, TOKEN_DURATION } = require('./config');
-const { throwError, handleCastErrorExceptionForInvalidObjectId, isCastError } = require('../utils/handleErrors');
+const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
+const { JWT_SECRETE_KEY, TOKEN_DURATION } = require("./config");
+const {
+  throwError,
+  handleCastErrorExceptionForInvalidObjectId,
+  isCastError,
+} = require("../utils/handleErrors");
 const { error } = require("../utils/baseController");
-const { USER_TYPE } = require('../utils/constants');
+const { USER_TYPE } = require("../utils/constants");
 
 // Generate Authorization Token
 async function generateAuthToken(payload) {
-  return jwt.sign(payload, JWT_SECRETE_KEY, {expiresIn: TOKEN_DURATION});
+  return jwt.sign(payload, JWT_SECRETE_KEY, { expiresIn: TOKEN_DURATION });
 }
 
 // checking if a user has a token
 const authenticate = async (req, res, next) => {
-    try {
-      const jwtPayload = decodeJwtToken(req);
-      const user = await getUserPayload(jwtPayload);
-      req.token = jwtPayload.token;
-      req.user = user;
-      next();
-    } catch (e) {
-      return error(res, {code: 401, message: e.message});
+  try {
+    const jwtPayload = decodeJwtToken(req);
+    const user = await getUserPayload(jwtPayload);
+    req.token = jwtPayload.token;
+    req.user = user;
+    next();
+  } catch (e) {
+    return error(res, { code: 401, message: e.message });
   }
-}
+};
 
 // Decoding Jwt token
 function decodeJwtToken(req) {
   const requestHeaderAuthorization = req.headers.authorization;
 
   if (!requestHeaderAuthorization) {
-      throwError('Authentication Failed. Please login', 401);
+    throwError("Authentication Failed. Please login", 401);
   }
 
-  const [authBearer, token] = requestHeaderAuthorization.split(' ');
+  const [authBearer, token] = requestHeaderAuthorization.split(" ");
 
-  if (authBearer !== 'Bearer') {
-      throwError('Authentication Failed', 401);
+  if (authBearer !== "Bearer") {
+    throwError("Authentication Failed", 401);
   }
 
   const jwtPayload = verifyToken(token);
@@ -51,39 +53,28 @@ function verifyToken(token) {
 
 async function getUserPayload(payload) {
   const userId = payload.userId;
-  if( payload.userType === USER_TYPE.HOST ){
-    return getHostPayload(userId);
-  } else if ( payload.userType === USER_TYPE.INDIVIDUAL ){
-    return getIndividualPayload(userId);
-  }
   return getUsersPayload(userId);
 }
 
-async function getHostPayload(userId) {
-    return await Host.findOne({_id: userId})
-        .orFail(() => throwError('Access denied. Please login or create an account', 401))
-        .catch(error => isCastError(error) ? handleCastErrorExceptionForInvalidObjectId() : error);
-}
-
 async function getUsersPayload(userId) {
-  return await User.findOne({_id: userId})
-      .orFail(() => throwError('Access denied. Please login or create an account', 401))
-      .catch(error => isCastError(error) ? handleCastErrorExceptionForInvalidObjectId() : error);
-}
-
-async function getIndividualPayload(userId) {
-  return await Individual.findOne({_id: userId})
-      .orFail(() => throwError('Access denied. Please login or create an account', 401))
-      .catch(error => isCastError(error) ? handleCastErrorExceptionForInvalidObjectId() : error);
+  return await User.findOne({ _id: userId })
+    .orFail(() =>
+      throwError("Access denied. Please login or create an account", 401)
+    )
+    .catch((error) =>
+      isCastError(error) ? handleCastErrorExceptionForInvalidObjectId() : error
+    );
 }
 
 // Permission for users
-function permit(users) {
+function permit(roles) {
   return (req, res, next) => {
-    const isAuthorized = users.includes(req.user.role);
-
+    const isAuthorized = roles.includes(req.user.role);
     if (!isAuthorized) {
-      return error(res, {code: 403, message: 'Unauthorized Access. Contact the admin.'})
+      return error(res, {
+        code: 403,
+        message: "Unauthorized Access. Contact the admin.",
+      });
     }
 
     next();
@@ -95,7 +86,11 @@ function isAllowed(users) {
     const isAuthorized = users.includes(req.user.verified);
 
     if (!isAuthorized) {
-      return error(res, {code: 403, message: 'You are not a verified user yet. Please contact the Administrator for further directives'})
+      return error(res, {
+        code: 403,
+        message:
+          "You are not a verified user yet. Please contact the Administrator for further directives",
+      });
     }
 
     next();
@@ -107,11 +102,15 @@ function restrict(users) {
     const isRestricted = users.includes(req.user.isActive);
 
     if (!isRestricted) {
-      return error(res, { code: 403, message: 'Sorry You Can Not Perform This Action Your Account is De-activated' })
+      return error(res, {
+        code: 403,
+        message:
+          "Sorry You Can Not Perform This Action Your Account is De-activated",
+      });
     }
 
     next();
-  }
+  };
 }
 
 module.exports = {
@@ -120,5 +119,5 @@ module.exports = {
   generateAuthToken,
   isAllowed,
   restrict,
-  verifyToken
-}
+  verifyToken,
+};

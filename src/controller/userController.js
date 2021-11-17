@@ -2,7 +2,6 @@ const { error, success } = require("../utils/baseController");
 const { generateAuthToken } = require("../core/userAuth");
 const { logger } = require("../utils/logger");
 const { USER_TYPE } = require("../utils/constants");
-const { registrationSuccessful } = require("../utils/sendgrid");
 const User = require("../service/User");
 
 exports.signup = async (req, res) => {
@@ -10,10 +9,9 @@ exports.signup = async (req, res) => {
     const newUser = await new User(req.body).signup();
     const token = await generateAuthToken({
       userId: newUser._id,
-      isActive: newUser.isActive,
-      userType: newUser.role,
+      isVerified: newUser.isVerified,
+      role: newUser.role,
     });
-    registrationSuccessful(newUser.email, newUser.firstName);
     return success(res, { newUser, token });
   } catch (err) {
     logger.error("Error occurred at signup", err);
@@ -26,8 +24,8 @@ exports.login = async (req, res) => {
     const userDetails = await new User(req.body).login();
     const token = await generateAuthToken({
       userId: userDetails._id,
-      isActive: userDetails.isActive,
-      userType: USER_TYPE.USER,
+      isVerified: userDetails.isVerified,
+      role: userDetails.role,
     });
     return success(res, { userDetails, token });
   } catch (err) {
