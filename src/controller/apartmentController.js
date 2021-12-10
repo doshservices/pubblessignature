@@ -1,6 +1,7 @@
 const { error, success } = require("../utils/baseController");
 const { logger } = require("../utils/logger");
 const Apartment = require("../service/Apartment");
+const User = require("../service/User");
 
 // create apartment
 exports.createApartment = async (req, res) => {
@@ -79,12 +80,31 @@ exports.makeApartmentNotAvailable = async (req, res) => {
 };
 
 // get all apartments
-exports.getAllApartments = async (req, res) => {
+exports.searchApartments = async (req, res) => {
   try {
-    const apartments = await new Apartment(req.query.apartmentSearch).getAllApartments();
+    const apartments = await new Apartment(
+      req.query.apartmentSearch
+    ).searchApartments();
     return success(res, { apartments });
   } catch (err) {
     logger.error("Unable to get all apartments", err);
     return error(res, { code: err.code, message: err.message });
   }
-}
+};
+
+// all apartment near you by location state and country
+exports.getApartmentsNearYou = async (req, res) => {
+  try {
+    const user = await new User(req.user._id).userProfile();
+    const apartmentCountry = user.country.toLowerCase() || "nigeria";
+    const apartmentState = user.state.toLowerCase() || "lagos";
+    const apartments = await new Apartment({
+      apartmentCountry,
+      apartmentState,
+    }).getApartmentsNearYou();
+    return success(res, { apartments });
+  } catch (err) {
+    logger.error("Unable to get all apartments", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};

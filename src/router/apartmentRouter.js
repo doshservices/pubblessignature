@@ -59,6 +59,11 @@ apartmentRoute
 // get all apartments
 apartmentRoute
   .route("/apartments")
-  .get(authenticate, apartmentController.getAllApartments);
+  .get(authenticate, apartmentController.searchApartments);
+
+// get all apartments near you
+apartmentRoute
+  .route("/apartments/near/you")
+  .get(authenticate, apartmentController.getApartmentsNearYou);
 
 module.exports = apartmentRoute;

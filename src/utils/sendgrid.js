@@ -1,8 +1,6 @@
-const {
-  SENDGRID_API_KEY,
-  VERIFIED_EMAIL,
-} = require("../core/config");
+const { SENDGRID_API_KEY, VERIFIED_EMAIL } = require("../core/config");
 const sgMail = require("@sendgrid/mail");
+const moment = require("moment");
 sgMail.setApiKey(SENDGRID_API_KEY);
 const { logger } = require("../utils/logger");
 const { cacheData } = require("../service/Redis");
@@ -148,18 +146,18 @@ function SuccessfulPasswordReset(Name, Email) {
     });
 }
 
-function deleteAccountEmail(Name, Email) {
+function bookingEmail(Name, Email, ApartmentName, CheckIn, CheckOut, BookingAmount, bookingOrderId) {
   const msg = {
     to: Email, // Change to your recipient
     from: VERIFIED_EMAIL, // Change to your verified sender
-    subject: "Account Deletion",
-    html: `<h1>Hello ${Name},</h1>
-        <p>Your account with Felt-Teacher has been Deleted. <b>We Hate To See You Go</b></p>
-        <p>Please do send us a review via our official mail feltteacher@gmail.com, bcause we would love to
-        know why you've decided to delete your account with us</p>
-        <p>Anytime you change your mind, please reach out us, we'll be glad to welcome you back</p>
-        <p> Best Regards,</p>
-        <p>Felt-Teachers</b>`,
+    subject: "Booking Confirmation",
+    html: `<h1>Dear ${Name},</h1>
+        <p>Booking with order number <b>${bookingOrderId}</b> has been <b>Confirmed</b></p>
+        <h5> Booking Details</h5>
+        <p>Apartment Name: ${ApartmentName}</p>
+        <p>Check In Date:${moment(CheckIn)}</p>
+        <p>Check Out Date:${moment(CheckOut)}</p>
+        <p>Booking Amount:${BookingAmount}</p>`,
   };
 
   sgMail
@@ -208,8 +206,8 @@ module.exports = {
   sendEmailVerificationToken,
   passwordEmail,
   SuccessfulPasswordReset,
-  deleteAccountEmail,
   registrationSuccessful,
   sendResetPasswordToken,
+  bookingEmail,
   verificationCode,
 };

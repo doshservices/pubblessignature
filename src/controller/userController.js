@@ -142,3 +142,14 @@ exports.getActiveApartment = async (req, res) => {
     return error(res, { code: err.code, message: err.message });
   }
 };
+
+// get user by id
+exports.getUser = async (req, res) => {
+  try {
+    const user = await new User(req.params.id).getUser();
+    return success(res, { user });
+  } catch (err) {
+    logger.error("Unable to complete request", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};

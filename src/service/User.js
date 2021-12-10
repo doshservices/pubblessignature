@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const util = require("../utils/util");
 const { validateParameters } = require("../utils/util");
 const { getCachedData } = require("../service/Redis");
-const Wallet = require("../models/wallet");
+const Wallet = require("./Wallet");
 const ApartmentSchema = require("../models/apartmentModel");
 const {
   sendResetPasswordToken,
@@ -75,7 +75,11 @@ class User {
       this.data.isVerified = true;
     }
     const newUser = await new UserSchema(this.data).save();
-    await new Wallet({ userId: newUser._id }).save();
+    const wallet = await new Wallet({ userId: newUser._id }).createWallet();
+    if (newUser.role !== USER_TYPE.USER) {
+      wallet.withdrawableBalance = 0;
+      wallet.save();
+    }
     return newUser;
   }
 
@@ -209,6 +213,13 @@ class User {
       isActive: true,
     });
     return apartments;
+  }
+
+  // get user by id
+  async getUser() {
+    return await UserSchema.findById(this.data).orFail(() =>
+      throwError("User Not Found", 404)
+    );
   }
 }
 

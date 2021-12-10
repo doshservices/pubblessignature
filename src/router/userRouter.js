@@ -43,4 +43,7 @@ userRoute
   .route("/users/apartments")
   .get(authenticate, userController.getActiveApartment);
 
+// get user by id
+userRoute.route("/users/:id").get(authenticate, userController.getUser);
+
 module.exports = userRoute;
