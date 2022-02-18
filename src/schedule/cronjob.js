@@ -5,7 +5,6 @@ const { BOOKING_STATUS, NOTIFICATION_TYPE } = require("../utils/constants");
 const Notification = require("../service/Notification");
 
 cron.schedule(DAILY_CRON_SCHEDULE, async () => {
-  console.log("Cron started");
   const bookings = await BookingSchema.find({
     bookingStatus: BOOKING_STATUS.PENDING,
   });
