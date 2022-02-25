@@ -12,11 +12,13 @@ const { USER_TYPE } = require("../utils/constants");
 // Generate Authorization Token
 async function generateAuthToken(payload) {
   return jwt.sign(payload, JWT_SECRETE_KEY, { expiresIn: TOKEN_DURATION });
+  console.log(payload)
 }
 
 // checking if a user has a token
 const authenticate = async (req, res, next) => {
   try {
+    
     const jwtPayload = decodeJwtToken(req);
     const user = await getUserPayload(jwtPayload);
     req.token = jwtPayload.token;

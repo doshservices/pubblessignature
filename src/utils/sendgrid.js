@@ -185,7 +185,8 @@ async function sendEmailVerificationToken(email) {
   try {
     const verificationCode1 = Math.floor(100000 + Math.random() * 100000);
     await sendEmailToken(email, verificationCode1);
-    cacheData(email, verificationCode1);
+    // this.data(email, verificationCode1);
+     console.log('Expected email:',email)
     return {
       message: `OTP Message sent to ${email} successfully`,
       data: "success",

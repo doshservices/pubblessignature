@@ -3,8 +3,9 @@ const { throwError } = require("../utils/handleErrors");
 const bcrypt = require("bcrypt");
 const util = require("../utils/util");
 const { validateParameters } = require("../utils/util");
-const { getCachedData } = require("../service/Redis");
+// const { getCachedData } = require("../service/Redis");
 const Wallet = require("./Wallet");
+const WalletSchema = require('../models/walletModel')
 const ApartmentSchema = require("../models/apartmentModel");
 const {
   sendResetPasswordToken,
@@ -15,6 +16,7 @@ const { USER_TYPE } = require("../utils/constants");
 class User {
   constructor(data) {
     this.data = data;
+    console.log(data)
     this.errors = [];
   }
 
@@ -57,15 +59,16 @@ class User {
       throwError(messages);
     }
     if (this.data.googleSigned === "false") {
+      console.log(this.data)
       if (!otp) {
         throwError("OTP Required To Complete Signup");
       }
-      const cachedOTP = await getCachedData(this.data.email);
-      if (!cachedOTP) {
-        throwError("OTP Code Expired");
-      } else if (cachedOTP !== otp) {
-        throwError("Invalid OTP");
-      }
+      // const cachedOTP = await getCachedData(this.data.email);
+      // if (!cachedOTP) {
+      //   throwError("OTP Code Expired");
+      // } else if (cachedOTP !== otp) {
+      //   throwError("Invalid OTP");
+      // }
     }
     await Promise.all([this.emailExist(), this.phoneNumberExist()]);
     if (this.errors.length) {
@@ -191,7 +194,7 @@ class User {
   //delete a user from the database
   async deleteUser() {
     //delete user wallet
-    const wallet = await Wallet.findOne({ userId: this.data });
+    const wallet = await ({ userId: this.data });
     if (wallet) {
       await wallet.remove();
     }
@@ -201,7 +204,7 @@ class User {
 
   //get user wallet
   async getUserWallet() {
-    return await Wallet.findOne({ userId: this.data }).orFail(() =>
+    return await WalletSchema.findOne({ userId: this.data }).orFail(() =>
       throwError("User Not Found", 404)
     );
   }

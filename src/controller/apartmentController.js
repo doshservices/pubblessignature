@@ -2,14 +2,17 @@ const { error, success } = require("../utils/baseController");
 const { logger } = require("../utils/logger");
 const Apartment = require("../service/Apartment");
 const User = require("../service/User");
+const { err_code } = require("redis/lib/utils");
 
 // create apartment
 exports.createApartment = async (req, res) => {
   try {
     req.body["userId"] = req.user._id;
+    console.log(req.body);
     await new Apartment(req.body).createApartment();
     return success(res, { message: "Apartment Created Successfully" });
   } catch (err) {
+  
     logger.error("Unable to complete host update request", err);
     return error(res, { code: err.code, message: err.message });
   }
@@ -92,18 +95,21 @@ exports.searchApartments = async (req, res) => {
   }
 };
 
-// all apartment near you by location state and country
+// all apartment near you by location state and city
 exports.getApartmentsNearYou = async (req, res) => {
   try {
     const user = await new User(req.user._id).userProfile();
     const apartmentCountry = user.country.toLowerCase() || "nigeria";
+    console.log(user.country);
     const apartmentState = user.state.toLowerCase() || "lagos";
+    console.log(user.state)
     const apartments = await new Apartment({
       apartmentCountry,
       apartmentState,
     }).getApartmentsNearYou();
     return success(res, { apartments });
   } catch (err) {
+    console.log(err)
     logger.error("Unable to get all apartments", err);
     return error(res, { code: err.code, message: err.message });
   }

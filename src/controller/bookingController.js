@@ -7,7 +7,7 @@ exports.createBooking = async (req, res) => {
   try {
     req.body["bookingUserId"] = req.user._id;
     await new Booking(req.body).createBooking();
-    return success(res, { message: "Booking Created Successfully" });
+    return success({ status: 'success', message: "Booking Created Successfully" });
   } catch (err) {
     logger.error("Unable to create booking", err);
     return error(res, { code: err.code, message: err.message });
@@ -18,7 +18,7 @@ exports.createBooking = async (req, res) => {
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await new Booking().getAllBookings();
-    return success(res, { bookings });
+    return success({status: 'success' , bookings });
   } catch (err) {
     logger.error("Unable to get all bookings", err);
     return error(res, { code: err.code, message: err.message });
@@ -29,7 +29,7 @@ exports.getAllBookings = async (req, res) => {
 exports.getBookingsByUserId = async (req, res) => {
   try {
     const bookings = await new Booking(req.user._id).getAllBookingsByUser();
-    return success(res, { bookings });
+    return success(res, { status: success, bookings });
   } catch (err) {
     logger.error("Unable to get bookings by userId", err);
     return error(res, { code: err.code, message: err.message });
