@@ -1,16 +1,16 @@
-const redis = require("redis");
-const { promisify } = require("util");
-const { REDIS_URL, OTP_DURATION } = require("../core/config");
+// const redis = require("redis");
+// const { promisify } = require("util");
+// const { REDIS_URL, OTP_DURATION } = require("../core/config");
 
 
-const redisClient = redis.createClient(REDIS_URL);
-const getAsync = promisify(redisClient.get).bind(redisClient);
+// const redisClient = redis.createClient(REDIS_URL);
+// const getAsync = promisify(redisClient.get).bind(redisClient);
 
-exports.cacheData = (key, value, expirationTime = OTP_DURATION) => {
-  console.log(OTP_DURATION)
-  redisClient.setex(key, expirationTime, value);
-};
+// exports.cacheData = (key, value, expirationTime = OTP_DURATION) => {
+//   console.log(OTP_DURATION)
+//   redisClient.setex(key, expirationTime, value);
+// };
 
-exports.getCachedData = async (key) => {
-  return await getAsync(key);
-};
+// exports.getCachedData = async (key) => {
+//   return await getAsync(key);
+// };
