@@ -81,6 +81,7 @@ exports.initializePayment = async (email, amount) => {
       status: response.data.status,
     };
   } catch (e) {
+    console.log(e);
     logger.error("Error initializing payment with paystack", e);
     throwError(
       "Error initializing payment. Kindly Contact The Administrator",

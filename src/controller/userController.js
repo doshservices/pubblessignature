@@ -12,7 +12,7 @@ exports.signup = async (req, res) => {
       isVerified: newUser.isVerified,
       role: newUser.role,
     });
-    return success(res, { newUser, token });
+    return success(res, {newUser, token});
   } catch (err) {
     logger.error("Error occurred at signup", err);
     return error(res, { code: err.code, message: err });
@@ -26,6 +26,7 @@ exports.login = async (req, res) => {
       userId: userDetails._id,
       isVerified: userDetails.isVerified,
       role: userDetails.role,
+      token: userDetails.token,
     });
     return success(res, { userDetails, token });
   } catch (err) {
