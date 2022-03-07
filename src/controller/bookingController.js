@@ -6,8 +6,9 @@ const Booking = require("../service/Booking");
 exports.createBooking = async (req, res) => {
   try {
     req.body["bookingUserId"] = req.user._id;
-    await new Booking(req.body).createBooking();
-    return success({ status: 'success', message: "Booking Created Successfully" });
+   let newBooking= await new Booking(req.body).createBooking();
+      return success(res,newBooking, "Booking Created Successfully");
+  //  return success({ res, status: 'success', message: "Booking Created Successfully" });
   } catch (err) {
     logger.error("Unable to create booking", err);
     return error(res, { code: err.code, message: err.message });

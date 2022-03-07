@@ -26,7 +26,6 @@ exports.login = async (req, res) => {
       userId: userDetails._id,
       isVerified: userDetails.isVerified,
       role: userDetails.role,
-      token: userDetails.token,
     });
     return success(res, { userDetails, token });
   } catch (err) {
