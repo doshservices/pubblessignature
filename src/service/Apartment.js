@@ -23,6 +23,9 @@ class Apartment {
         "apartmentImages",
         "numberOfRooms",
         "apartmentInfo",
+        "numberOfBedrooms",
+        "numberOfToilets",
+        "numberOfGuests",
       ],
       this.data
     );
