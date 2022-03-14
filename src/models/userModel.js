@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const bcrypt = require("bcrypt");
 const { Schema, model } = require("mongoose");
 const validator = require("validator");

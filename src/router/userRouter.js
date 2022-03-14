@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const userRoute = require("../core/routerConfig");
 const userController = require("../controller/userController");
 const { authenticate, permit } = require("../core/userAuth");
@@ -9,7 +10,8 @@ userRoute
   .post(userController.signup)
   .get(authenticate, userController.getUserProfile)
   .put(authenticate, userController.updateUserDetails)
-  .delete(authenticate, userController.deleteUser);
+  .delete(authenticate, permit(Object.keys(ADMIN_ROLES)), userController.deleteUser)
+  
 
 userRoute
   .route("/users/all")
@@ -18,6 +20,11 @@ userRoute
     permit(Object.keys(ADMIN_ROLES)),
     userController.getAllUser
   );
+  
+userRoute
+.route("/users/create-admin")
+.post(authenticate,
+  permit(ADMIN_ROLES.SUPER_ADMIN),userController.createAdmin);
 
 userRoute.route("/users/login").post(userController.login);
 
@@ -32,6 +39,9 @@ userRoute
     upload.imageUpload.any(),
     userController.uploadProfileImage
   );
+
+
+
 
 // get user wallet
 userRoute

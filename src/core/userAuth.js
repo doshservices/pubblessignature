@@ -1,3 +1,5 @@
+
+/*eslint-disable*/
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const { JWT_SECRETE_KEY, TOKEN_DURATION } = require("./config");
@@ -7,11 +9,10 @@ const {
   isCastError,
 } = require("../utils/handleErrors");
 const { error } = require("../utils/baseController");
-const { USER_TYPE } = require("../utils/constants");
+const { USER_TYPE,ADMIN_ROLES } = require("../utils/constants");
 
 // Generate Authorization Token
 async function generateAuthToken(payload) {
-  console.log(payload)
   return jwt.sign(payload, JWT_SECRETE_KEY, { expiresIn: TOKEN_DURATION });
  
 }
@@ -73,6 +74,7 @@ async function getUsersPayload(userId) {
 function permit(roles) {
   return (req, res, next) => {
     const isAuthorized = roles.includes(req.user.role);
+    console.log(req.user.role)
     if (!isAuthorized) {
       return error(res, {
         code: 403,

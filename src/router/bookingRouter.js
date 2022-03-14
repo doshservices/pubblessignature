@@ -1,3 +1,5 @@
+
+/*eslint-disable*/
 const bookingRoute = require("../core/routerConfig");
 const bookingController = require("../controller/bookingController");
 const { authenticate, permit } = require("../core/userAuth");
@@ -15,7 +17,7 @@ bookingRoute
 // get all bookings
 bookingRoute
   .route("/bookings/all-bookings")
-  .get(authenticate, bookingController.getAllBookings);
+  .get(authenticate,permit([ADMIN_ROLES.SUPER_ADMIN, ADMIN_ROLES.ADMIN]), bookingController.getAllBookings);
 
 // get booking by userId
 bookingRoute

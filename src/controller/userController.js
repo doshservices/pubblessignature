@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const { error, success } = require("../utils/baseController");
 const { generateAuthToken } = require("../core/userAuth");
 const { logger } = require("../utils/logger");
@@ -14,6 +15,7 @@ exports.signup = async (req, res) => {
     });
     return success(res, {newUser, token});
   } catch (err) {
+    console.log(err)
     logger.error("Error occurred at signup", err);
     return error(res, { code: err.code, message: err });
   }
@@ -22,6 +24,7 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const userDetails = await new User(req.body).login();
+    console.log(req.body)
     const token = await generateAuthToken({
       userId: userDetails._id,
       isVerified: userDetails.isVerified,
@@ -31,6 +34,21 @@ exports.login = async (req, res) => {
   } catch (err) {
     logger.error("Error occurred at login", err.message);
     return error(res, { code: err.code, message: err.message });
+  }
+};
+
+exports.createAdmin = async (req, res) => {
+  try {
+    const newUser = await new User(req.body).createAdmin();
+    const token = await generateAuthToken({
+      userId: newUser._id,
+      isVerified: newUser.isVerified,
+      role: newUser.role,
+    });
+    return success(res, {newUser, token});
+  } catch (err) {
+    logger.error("Error occurred at signup", err);
+    return error(res, { code: err.code, message: err });
   }
 };
 

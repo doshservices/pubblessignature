@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const UserSchema = require("../models/userModel");
 const { throwError } = require("../utils/handleErrors");
 const bcrypt = require("bcrypt");
@@ -11,7 +12,7 @@ const {
   sendResetPasswordToken,
   SuccessfulPasswordReset,
 } = require("../utils/sendgrid");
-const { USER_TYPE } = require("../utils/constants");
+const {ADMIN_ROLES, USER_TYPE } = require("../utils/constants");
 
 class User {
   constructor(data) {
@@ -99,6 +100,34 @@ class User {
     }
     return await UserSchema.findByCredentials(loginId, password);
   }
+  
+
+  async createAdmin() {
+    const otp = this.data.otp;
+    const { isValid, messages } = validateParameters(
+        ["phoneNumber", "email", "password"],
+        this.data
+       );
+    if (!isValid) {
+        throwError(messages);
+      }
+      if (this.data.googleSigned === "false") {
+        console.log(this.data)
+        if (!otp) {
+          throwError("OTP Required To Complete Signup");
+      }
+      await Promise.all([this.emailExist(), this.phoneNumberExist()]);
+      if (this.errors.length) {
+        throwError(this.errors);
+      }
+      if (this.data.role === ADMIN_ROLES.ADMIN) {
+        this.data.isVerified = true;
+      }
+      const newUser = await new UserSchema(this.data).save();
+      return newUser;
+    }
+  }
+
 
   static async getAllUser() {
     return await UserSchema.find()

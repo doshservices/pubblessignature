@@ -6,6 +6,7 @@ const Booking = require("../service/Booking");
 exports.createBooking = async (req, res) => {
   try {
     req.body["bookingUserId"] = req.user._id;
+    console.log(req.user)
    let newBooking= await new Booking(req.body).createBooking();
       return success(res,newBooking, "Booking Created Successfully");
   //  return success({ res, status: 'success', message: "Booking Created Successfully" });
@@ -16,10 +17,10 @@ exports.createBooking = async (req, res) => {
 };
 
 // get all bookings
-exports.getAllBookings = async (req, res) => {
+exports.getAllBookings = async (req, res) => { 
   try {
     const bookings = await new Booking().getAllBookings();
-    return success({status: 'success' , bookings });
+    return success(res,'success' , bookings);
   } catch (err) {
     logger.error("Unable to get all bookings", err);
     return error(res, { code: err.code, message: err.message });
