@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const NotificationSchema = require("../models/notificationModel");
 const { throwError } = require("../utils/handleErrors");
 

@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const TransactionSchema = require("../models/transactionModel");
 const { throwError } = require("../utils/handleErrors");
 const TRANSACTION_NOT_FOUND = (message) =>

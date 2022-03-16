@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const WalletSchema = require("../models/walletModel");
 const UserSchema = require("../models/userModel");
 const { throwError } = require("../utils/handleErrors");

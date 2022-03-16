@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const { error, success } = require("../utils/baseController");
 const { logger } = require("../utils/logger");
 const Apartment = require("../service/Apartment");
@@ -91,6 +92,16 @@ exports.searchApartments = async (req, res) => {
     return success(res, { apartments });
   } catch (err) {
     logger.error("Unable to get all apartments", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
+
+exports.getAllApartment = async (req, res) => {
+  try {
+    const apartments = await Apartment.getAllApartment();
+    return success(res, { apartments });
+  } catch (err) {
+    logger.error("Unable to complete request", err);
     return error(res, { code: err.code, message: err.message });
   }
 };

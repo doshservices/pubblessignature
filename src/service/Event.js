@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const { throwError } = require("../utils/handleErrors");
 const { validateParameters } = require("../utils/util");
 const EventSchema = require("../models/eventModel");

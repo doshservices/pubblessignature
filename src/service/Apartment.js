@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const ApartmentSchema = require("../models/apartmentModel");
 const { throwError } = require("../utils/handleErrors");
 const { validateParameters } = require("../utils/util");
@@ -82,6 +83,9 @@ class Apartment {
       "apartmentImages",
       "numberOfRooms",
       "apartmentInfo",
+      "numberOfBedrooms",
+      "numberOfToilets",
+      "numberOfGuests",
     ];
     newDetails.apartmentName = newDetails.apartmentName.toLowerCase();
     newDetails.apartmentCountry = newDetails.apartmentCountry.toLowerCase();

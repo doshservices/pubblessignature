@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const moment = require("moment");
 const { throwError } = require("../utils/handleErrors");
 const { validateParameters } = require("../utils/util");

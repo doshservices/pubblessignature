@@ -74,7 +74,6 @@ async function getUsersPayload(userId) {
 function permit(roles) {
   return (req, res, next) => {
     const isAuthorized = roles.includes(req.user.role);
-    console.log(req.user.role)
     if (!isAuthorized) {
       return error(res, {
         code: 403,

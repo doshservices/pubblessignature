@@ -1,3 +1,5 @@
+
+/*eslint-disable*/
 const { Schema, model } = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
@@ -48,6 +50,18 @@ const apartmentSchema = new Schema({
     default: true,
   },
   numberOfRooms: {
+    type: Number,
+    required: true,
+  },
+  numberOfToilets: {
+    type: Number,
+    required: true,
+  },
+  numberOfBedrooms: {
+    type: Number,
+    required: true,
+  },
+  numberOfGuests: {
     type: Number,
     required: true,
   },

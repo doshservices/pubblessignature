@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const { createTransferRecipient } = require("../integration/paystackClient");
 const bankSchema = require("../models/bankModel");
 const { throwError } = require("../utils/handleErrors");
