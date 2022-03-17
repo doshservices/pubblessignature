@@ -18,4 +18,6 @@ module.exports = {
   KOBO_RATE: process.env.KOBO_RATE,
   AMOUNT: process.env.AMOUNT,
   DAILY_CRON_SCHEDULE: process.env.DAILY_CRON_SCHEDULE,
+  PUBLIC_KEY: process.env.PUBLIC_KEY,
+  SECRET_KEY: process.env.SECRET_KEY,
 };

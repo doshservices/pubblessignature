@@ -1,3 +1,5 @@
+
+/*eslint-disable*/
 const transactionRoute = require("../core/routerConfig");
 const transactionController = require("../controller/transactionController");
 const { authenticate, permit } = require("../core/userAuth");
