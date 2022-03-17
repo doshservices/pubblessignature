@@ -56,7 +56,10 @@ apartmentRoute
     apartmentController.makeApartmentNotAvailable
   );
 
-
+//search apartment
+apartmentRoute
+.route("/apartments-one/search")
+.get(authenticate, apartmentController.searchApartments)
 
 // get all apartments near you
 apartmentRoute

@@ -108,11 +108,12 @@ class User {
         ["phoneNumber", "email", "password"],
         this.data
        );
+       console.log("i ran",this.data)
     if (!isValid) {
+     
         throwError(messages);
       }
       if (this.data.googleSigned === "false") {
-        console.log(this.data)
         if (!otp) {
           throwError("OTP Required To Complete Signup");
       }

@@ -23,8 +23,7 @@ userRoute
   
 userRoute
 .route("/users/create-admin")
-.post(authenticate,
-  permit(ADMIN_ROLES.SUPER_ADMIN),userController.createAdmin);
+.post(authenticate,permit(ADMIN_ROLES.SUPER_ADMIN),userController.createAdmin);
 
 userRoute.route("/users/login").post(userController.login);
 

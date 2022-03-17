@@ -86,6 +86,7 @@ exports.makeApartmentNotAvailable = async (req, res) => {
 // get all apartments
 exports.searchApartments = async (req, res) => {
   try {
+    console.log('apartmentSearch  ',req.params)
     const apartments = await new Apartment(
       req.query.apartmentSearch
     ).searchApartments();

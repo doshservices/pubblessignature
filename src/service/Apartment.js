@@ -108,7 +108,9 @@ class Apartment {
 
   // search apartments
   async searchApartments() {
+
     let query = { isAvailable: true };
+
     let apartmentSearch = this.data;
     query.$or = [
       {

@@ -4,7 +4,7 @@ module.exports = {
     FEMALE: "FEMALE",
   },
   ADMIN_ROLES: {
-    SUPER_ADMIN: "SUPER_ADMIN",
+    SUPER-ADMIN: "SUPER-ADMIN",
     ADMIN: "ADMIN",
     HOSTEL_MANAGER: "HOSTEL_MANAGER",
   },
