@@ -1,60 +1,42 @@
 /*eslint-disable*/
-const Flutterwave = require('flutterwave-node-v3');
-const { throwError } = require("../utils/handleErrors");
-const { logger } = require("../utils/logger");
-const { PUBLIC_KEY, SECRET_KEY } = require("../core/config");
+const axios = require("axios");
+const { error, success } = require("../utils/baseController");
+const FLW_SECRET_KEY = require("../core/config");
 
-const flw = new Flutterwave(PUBLIC_KEY, SECRET_KEY);
-
-const payload = {
-    "card_number": "5531886652142950",
-    "cvv": "564",
-    "expiry_month": "09",
-    "expiry_year": "21",
-    "currency": "NGN",
-    "amount": "100",
-    "redirect_url": "https://www.google.com",
-    "fullname": "Olufemi Obafunmiso",
-    "email": "olufemi@flw.com",
-    "phone_number": "0902620185",
-    "enckey": "611d0eda25a3c931863d92c4",
-    "tx_ref": "MC-32444ee--4eerye4euee3rerds4423e43e" // This is a unique reference, unique to the particular transaction being carried out. It is generated when it is not provided by the merchant for every transaction.
-
-}
-const chargeCard = async () => {
-    try {
-        const response = await flw.Charge.card(payload)
-        console.log(response)
-        if (response.meta.authorization.mode === 'pin') {
-            let payload2 = payload
-            payload2.authorization = {
-                "mode": "pin",
-                "fields": [
-                    "pin"
-                ],
-                "pin": 3310
-            }
-            const reCallCharge = await flw.Charge.card(payload2)
-
-            const callValidate = await flw.Charge.validate({
-                "otp": "12345",
-                "flw_ref": reCallCharge.data.flw_ref
-            })
-            console.log(callValidate)
-
+exports.initializePayment = async (req, res) => {
+    payload = {
+        tx_ref:  "PS_"+Math.floor((Math.random()*100000000)+1),
+        amount: "100",
+        currency: "NGN",
+        redirect_url: "https://webhook.site/9d0b00ba-9a69-44fa-a43d-a82c33c36fdc",
+        customer: {
+            email: "juniorefe45@gmail.com",
+            phonenumber: "08036792165",
+            name: "Abduljelili Umaru"
+        },
+        meta: {
+            user_id: "622f1121fce8fb2c64e1c298",
+           
+        },
+        customizations: {
+            title: "Pied Piper Payments",
+            logo: "http://www.piedpiper.com/app/themes/joystick-v27/images/logo.png"
         }
-        if (response.meta.authorization.mode === 'redirect') {
-
-            var url = response.meta.authorization.redirect
-            open(url)
-        }
-
-        console.log(response)
-
-
-    } catch (error) {
-        console.log(error)
     }
-}
+try {
+    const response = await axios.post(
+        "https://api.flutterwave.com/v3/payments", 
+        { 
+            "headers": { "Authorization": `Bearer ${process.env.FLW_SECRET_KEY}` },
+        },payload
 
-chargeCard();
+    );
+     return response.data
+
+      
+} catch (err) {
+    console.log ("<<<<<<<",err)
+    console.log(err);
+   console.log(err.response.body);
+}
+}

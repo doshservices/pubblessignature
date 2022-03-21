@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const bankRoute = require("../core/routerConfig");
 const bankController = require("../controller/bankController");
 const { authenticate, permit } = require("../core/userAuth");

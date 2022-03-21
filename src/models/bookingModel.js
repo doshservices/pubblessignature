@@ -55,10 +55,16 @@ const bookingSchema = new Schema(
       type: Date,
       default: Date.now(),
     },
-    paystackReference: {
+    // paystackReference: {
+    //   type: String,
+    // },
+    // paystackUrl: {
+    //   type: String,
+    // },
+    tx_ref: {
       type: String,
     },
-    paystackUrl: {
+    redirect_url: {
       type: String,
     },
     paymentMethod: {

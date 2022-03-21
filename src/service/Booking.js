@@ -1,5 +1,6 @@
 /*eslint-disable*/
 const moment = require("moment");
+const axios = require("axios");
 const { throwError } = require("../utils/handleErrors");
 const { validateParameters } = require("../utils/util");
 const BookingSchema = require("../models/bookingModel");
@@ -13,10 +14,15 @@ const Notification = require("./Notification");
 const Transaction = require("./Transaction");
 const Wallet = require("./Wallet");
 const {
-  initializePayment,
+  initiatePayment,
   verifyPayment,
 } = require("../integration/paystackClient");
+const {
+  initializePayment, payload
+} = require("../integration/flutterwave");
 const { bookingEmail } = require("../utils/sendgrid");
+const FLW_SECRET_KEY = require("../core/config");
+
 
 class Booking {
   constructor(data) {
@@ -223,19 +229,22 @@ class Booking {
       );
       return await booking.save();
     } else {
-      const amount = booking.bookingAmount * 100;
-      const { reference, confirmationUrl, status } = await initializePayment(
-        booking.bookingUserId.email,
-        amount
-      );
-      booking.paystackReference = reference;
-      booking.paystackUrl = confirmationUrl;
-      if (status === true) {
-        booking.paymentStatus = PAYMENT_STATUS.SUCCESS;
-      }
+      // const amount = booking.bookingAmount * 100;
+     
+    await initializePayment();
+      // const { reference, confirmationUrl,status} = await initializePayment(
+      //    booking.bookingUserId.email,
+      //    amount
+       
+      // );
+      // booking.paystackReference = reference;
+      // booking.paystackUrl = confirmationUrl;
+      // if (status === success) {
+      //   booking.paymentStatus = PAYMENT_STATUS.SUCCESS;
+      // }
       booking.bookingOrderId = "BK" + Date.now().valueOf() + "REF";
       await booking.save();
-      return booking.paystackUrl;
+      // return booking.paystackUrl;
     }
   }
   async verifyBooking() {

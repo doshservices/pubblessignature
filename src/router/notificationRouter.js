@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const notificationRoute = require("../core/routerConfig");
 const notificationController = require("../controller/notificationController");
 const { authenticate, permit } = require("../core/userAuth");

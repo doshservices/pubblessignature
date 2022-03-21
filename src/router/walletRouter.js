@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const walletRoute = require("../core/routerConfig");
 const walletController = require("../controller/walletController");
 const { authenticate, permit } = require("../core/userAuth");

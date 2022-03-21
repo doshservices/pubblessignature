@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const apartmentRoute = require("../core/routerConfig");
 const apartmentController = require("../controller/apartmentController");
 const { authenticate, permit } = require("../core/userAuth");
@@ -23,10 +24,7 @@ apartmentRoute
 // get apartment by id
 apartmentRoute
   .route("/apartments/:id")
-  .get(
-    authenticate,
-    permit([USER_TYPE.BUSINESS, USER_TYPE.INDIVIDUAL]),
-    apartmentController.getApartmentById
+  .get(authenticate, apartmentController.getApartmentById
   );
 
 // delete apartment by id

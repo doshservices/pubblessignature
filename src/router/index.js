@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const baseRoute = require("../core/routerConfig");
 const { sendEmailVerificationToken } = require("../utils/sendgrid");
 
