@@ -19,7 +19,7 @@ const walletRouter = require('./src/router/walletRouter');
 const transactionRouter = require('./src/router/transactionRouter');
 const bookingRouter = require('./src/router/bookingRouter');
 const notificationRouter = require('./src/router/notificationRouter');
-const flutterRouter= require('./src/router/flutterRouter')
+
 // App Init
 const app = express();
 
@@ -39,7 +39,6 @@ app.use('/api', walletRouter);
 app.use('/api', transactionRouter);
 app.use('/api', bookingRouter);
 app.use('/api', notificationRouter);
-app.use('/api', flutterRouter);
 
 app.listen(PORT, () =>
   logger.info(`Booking Backend Service Started on port ${PORT}`)

@@ -12,6 +12,12 @@ apartmentRoute
     apartmentController.createApartment
   );
 
+ // get all apartments 
+ apartmentRoute
+ .route("/apartments/all-apartments")
+ .get(authenticate, apartmentController.getAllApartment
+ );
+
 // get user apartment
 apartmentRoute
   .route("/apartments/user")
@@ -27,6 +33,7 @@ apartmentRoute
   .get(authenticate, apartmentController.getApartmentById
   );
 
+ 
 // delete apartment by id
 apartmentRoute
   .route("/apartments/:id")

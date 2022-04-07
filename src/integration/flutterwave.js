@@ -1,42 +1,73 @@
-/*eslint-disable*/
-const axios = require("axios");
-const { error, success } = require("../utils/baseController");
+// /*eslint-disable*/
+// const axios = require("axios");
+// const got =require("got")
+// const { error, success } = require("../utils/baseController");
+// const FLW_SECRET_KEY = require("../core/config");
+
+//     // const response = await axios.post(
+//     //     "https://api.flutterwave.com/v3/payments",
+//     //     {
+//     //         "headers": { "Authorization": `Bearer ${process.env.FLW_SECRET_KEY}` },
+//     //     },payload
+
+//     // );
+
+// // } catch (err) {
+// //     console.log ("<<<<<<<",err)
+// //     console.log(err);
+// //    console.log(err.response.body);
+// //}
+
+var axios = require("axios");
 const FLW_SECRET_KEY = require("../core/config");
 
-exports.initializePayment = async (req, res) => {
-    payload = {
-        tx_ref:  "PS_"+Math.floor((Math.random()*100000000)+1),
-        amount: "100",
-        currency: "NGN",
-        redirect_url: "https://webhook.site/9d0b00ba-9a69-44fa-a43d-a82c33c36fdc",
-        customer: {
-            email: "juniorefe45@gmail.com",
-            phonenumber: "08036792165",
-            name: "Abduljelili Umaru"
-        },
-        meta: {
-            user_id: "622f1121fce8fb2c64e1c298",
-           
-        },
-        customizations: {
-            title: "Pied Piper Payments",
-            logo: "http://www.piedpiper.com/app/themes/joystick-v27/images/logo.png"
-        }
-    }
-try {
-    const response = await axios.post(
-        "https://api.flutterwave.com/v3/payments", 
-        { 
-            "headers": { "Authorization": `Bearer ${process.env.FLW_SECRET_KEY}` },
-        },payload
+exports.initiatePaymentFlutterwave = async (
+  amount,
+  email,
+  phone,
+  name,
+  userId
+) => {
+  try {
+    var data = JSON.stringify({
+      tx_ref: "PS_" + Math.floor(Math.random() * 100000000 + 1),
+      amount: amount,
+      currency: "NGN",
+      redirect_url: "https://webhook.site/9d0b00ba-9a69-44fa-a43d-a82c33c36fdc",
+      customer: {
+        email: email,
+        phonenumber: phone,
+        name: name,
+      },
+      meta: {
+        user_id: userId,
+      },
+    });
 
-    );
-     return response.data
+    var config = {
+      method: "post",
+      url: "https://api.flutterwave.com/v3/payments",
+      headers: {
+        Authorization: "Bearer FLWSECK_TEST-b058747e32a9287f8fbef071340a83d6-X",
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
 
-      
-} catch (err) {
-    console.log ("<<<<<<<",err)
-    console.log(err);
-   console.log(err.response.body);
-}
-}
+   return axios(config)
+      .then(function (response) {
+        console.log("==========Inside Payment");
+        //  console.log( { reference: response.data.tx_ref,
+        //            confirmationUrl: response.data.redirect_url,
+        //            userId: response.data.meta.user_id,
+        //   });
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  } catch (err) {
+    console.log(err.code);
+    console.log(err.response.body);
+  }
+};

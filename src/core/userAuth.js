@@ -73,7 +73,6 @@ async function getUsersPayload(userId) {
 // Permission for users
 function permit(roles) {
   return (req, res, next) => {
-    console.log('+++++++', req.user)
     const isAuthorized = roles.includes(req.user.role);
     if (!isAuthorized) {
       return error(res, {

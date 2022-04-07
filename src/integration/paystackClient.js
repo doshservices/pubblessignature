@@ -69,7 +69,7 @@ exports.createTransferRecipient = async (payload) => {
   }
 };
 
-exports.initiatePayment = async (email, amount) => {
+exports.initializePayment = async (email, amount) => {
   try {
     const response = await axiosInstance.post(`/transaction/initialize`, {
       email,

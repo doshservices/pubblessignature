@@ -17,11 +17,9 @@ const {
   initiatePayment,
   verifyPayment,
 } = require("../integration/paystackClient");
-const {
-  initializePayment, payload
-} = require("../integration/flutterwave");
+const { initiatePaymentFlutterwave } = require('../integration/flutterwave')
 const { bookingEmail } = require("../utils/sendgrid");
-const FLW_SECRET_KEY = require("../core/config");
+
 
 
 class Booking {
@@ -228,23 +226,44 @@ class Booking {
         booking.bookingOrderId
       );
       return await booking.save();
-    } else {
-      // const amount = booking.bookingAmount * 100;
+    } else if (paymentMethod === "FLUTTERWAVE") {
+    const amount = booking.bookingAmount * 100;
      
-    await initializePayment();
-      // const { reference, confirmationUrl,status} = await initializePayment(
+  //   await initializePayment();
+  //     const { reference, confirmationUrl,status} = await initializePayment(
+  //        booking.bookingUserId.email,
+  //        amount
+       
+  //     );
+  //     booking.paystackReference = reference;
+  //     booking.paystackUrl = confirmationUrl;
+  //     if (status === success) {
+  //       booking.paymentStatus = PAYMENT_STATUS.SUCCESS;
+  //     }
+  //     booking.bookingOrderId = "BK" + Date.now().valueOf() + "REF";
+  //     await booking.save();
+  //     return booking.paystackUrl;
+  //   }
+  // }
+      //await initializePayment();
+      // const { reference,confirmationUrl,status} = await initializePayment(
       //    booking.bookingUserId.email,
       //    amount
        
       // );
       // booking.paystackReference = reference;
       // booking.paystackUrl = confirmationUrl;
-      // if (status === success) {
+      // if (userId === bookingUserId) {
       //   booking.paymentStatus = PAYMENT_STATUS.SUCCESS;
       // }
-      booking.bookingOrderId = "BK" + Date.now().valueOf() + "REF";
-      await booking.save();
+      // booking.bookingOrderId = "BK" + Date.now().valueOf() + "REF";
+      // await booking.save();
       // return booking.paystackUrl;
+
+     let checkOut = await initiatePaymentFlutterwave(amount, booking.bookingUserId.email, '0909929394', booking.bookingUserId.fullName, userId)
+     return  checkOut.data.link;
+   
+   
     }
   }
   async verifyBooking() {

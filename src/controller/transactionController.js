@@ -22,7 +22,7 @@ exports.getAllUserTransactions = async (req, res) => {
     ).getAllUserTransactions();
     return success(res, { transactions });
   } catch (err) {
-    logger.error(`Error crediting user ${userId} Transaction. ${err}`);
+    logger.error(`Error crediting user ${req.user._id} Transaction. ${err}`);
     return error(res, { code: err.code, message: err.message });
   }
 };

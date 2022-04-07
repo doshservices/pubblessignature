@@ -51,6 +51,12 @@ class Apartment {
     );
   }
 
+  async getAllApartment() {
+    return await ApartmentSchema.find({})
+      .sort({ createdAt: -1 })
+      .orFail(() => throwError("No Apartment Found", 404));
+  }
+
   async deleteApartment() {
     const { id, userId } = this.data;
     const apartment = await ApartmentSchema.findById(id).orFail(() =>
@@ -131,6 +137,7 @@ class Apartment {
       },
       { typeOfApartment: { $regex: apartmentSearch, $options: "i" } },
       { facilities: { $regex: apartmentSearch, $options: "i" } },
+      { dateList: { $in: [apartmentSearch] } },
     ];
     return await ApartmentSchema.find(query);
   }

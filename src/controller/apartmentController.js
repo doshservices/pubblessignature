@@ -9,7 +9,6 @@ const { err_code } = require("redis/lib/utils");
 exports.createApartment = async (req, res) => {
   try {
     req.body["userId"] = req.user._id;
-    console.log(req.body);
     await new Apartment(req.body).createApartment();
     return success(res, { message: "Apartment Created Successfully" });
   } catch (err) {
@@ -29,6 +28,15 @@ exports.getUserApartment = async (req, res) => {
   }
 };
 
+exports.getAllApartment = async (req, res) => { 
+  try {
+    const apartments = await new Apartment().getAllApartment();
+    return success(res,'success' , apartments);
+  } catch (err) {
+    logger.error("Unable to get all apartments", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
 // get apartment by id
 exports.getApartmentById = async (req, res) => {
   try {
@@ -83,7 +91,7 @@ exports.makeApartmentNotAvailable = async (req, res) => {
   }
 };
 
-// get all apartments
+// search apartments
 exports.searchApartments = async (req, res) => {
   try {
     console.log('apartmentSearch  ',req.params)
@@ -93,16 +101,6 @@ exports.searchApartments = async (req, res) => {
     return success(res, { apartments });
   } catch (err) {
     logger.error("Unable to get all apartments", err);
-    return error(res, { code: err.code, message: err.message });
-  }
-};
-
-exports.getAllApartment = async (req, res) => {
-  try {
-    const apartments = await Apartment.getAllApartment();
-    return success(res, { apartments });
-  } catch (err) {
-    logger.error("Unable to complete request", err);
     return error(res, { code: err.code, message: err.message });
   }
 };
