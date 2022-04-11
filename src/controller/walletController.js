@@ -14,6 +14,7 @@ exports.getUserWallet = async (req, res) => {
 
 exports.fundWallet = async (req, res) => {
   const userId = req.user._id;
+  console.log(req.user._id)
   req.body["userId"] = userId;
   try {
     const transaction = await new Wallet(req.body).fundWallet();

@@ -357,7 +357,7 @@ function sendEmailToken(Email, token) {
                                                             alt="Image"
                                                             border="0"
                                                             class="center fixedwidth"
-                                                            src="images/pebbles-2.png"
+                                                            src="https://res.cloudinary.com/pebbles-signature/image/upload/v1649685746/pebbles-2_ppknln.png"
                                                             style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 540px; display: block;"
                                                             title="Image"
                                                             width="540"

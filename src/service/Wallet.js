@@ -11,6 +11,7 @@ const {
   initializePayment,
   verifyPayment,
 } = require("../integration/paystackClient");
+const { initiatePaymentFlutterwave } = require('../integration/flutterwave')
 const { TRANSACTION_STATUS, TRANSACTION_TYPE } = require("../utils/constants");
 
 class Wallet {
@@ -94,10 +95,30 @@ class Wallet {
     return "Withdrawal Successful";
   }
 
+  // async fundWallet() {
+  //   const { amount, userId } = this.data;
+  //   const user = await UserSchema.findById(userId);
+  //   const { reference, confirmationUrl } = await initializePayment(
+  //     user.email,
+  //     amount * 100
+  //   );
+  //   const transactionDetails = {
+  //     userId: userId,
+  //     amount: amount,
+  //     reason: "Fund Wallet",
+  //     type: TRANSACTION_TYPE.CREDIT,
+  //     reference,
+  //     paymentDate: Date.now(),
+  //     status: TRANSACTION_STATUS.PENDING,
+  //   };
+  //   await Transaction.createTransaction(transactionDetails);
+  //   return confirmationUrl;
+  // }
+
   async fundWallet() {
     const { amount, userId } = this.data;
     const user = await UserSchema.findById(userId);
-    const { reference, confirmationUrl } = await initializePayment(
+    const checkOut = await initiatePaymentFlutterwave(
       user.email,
       amount * 100
     );
@@ -106,12 +127,11 @@ class Wallet {
       amount: amount,
       reason: "Fund Wallet",
       type: TRANSACTION_TYPE.CREDIT,
-      reference,
       paymentDate: Date.now(),
       status: TRANSACTION_STATUS.PENDING,
     };
     await Transaction.createTransaction(transactionDetails);
-    return confirmationUrl;
+    return  checkOut.data.link;
   }
 
   // verify fund transfer

@@ -29,10 +29,10 @@ const transactionSchema = new Schema(
       required: true,
       enum: Object.keys(TRANSACTION_TYPE),
     },
-    reference: {
-      type: String,
-      required: true,
-    },
+    // reference: {
+    //   type: String,
+    //   required: true,
+    // },
     paymentDate: {
       type: String,
       required: true,
