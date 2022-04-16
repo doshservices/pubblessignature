@@ -11,7 +11,7 @@ const {
   initializePayment,
   verifyPayment,
 } = require("../integration/paystackClient");
-const { initiatePaymentFlutterwave } = require('../integration/flutterwave')
+const { initiatePaymentFlutterwave, flutterPaymentCallback} = require('../integration/flutterwave')
 const { TRANSACTION_STATUS, TRANSACTION_TYPE } = require("../utils/constants");
 
 class Wallet {
@@ -118,9 +118,11 @@ class Wallet {
   async fundWallet() {
     const { amount, userId } = this.data;
     const user = await UserSchema.findById(userId);
+    console.log(user)
     const checkOut = await initiatePaymentFlutterwave(
+      amount,
       user.email,
-      amount * 100
+      
     );
     const transactionDetails = {
       userId: userId,
@@ -131,26 +133,28 @@ class Wallet {
       status: TRANSACTION_STATUS.PENDING,
     };
     await Transaction.createTransaction(transactionDetails);
+    console.log(checkOut)
     return  checkOut.data.link;
   }
 
   // verify fund transfer
-  async verifyFundTransfer() {
-    const { status } = await verifyPayment(this.data);
-    const transactionDetails = await new Transaction(
-      this.data
-    ).getTransactionByReference();
-    if (status.toUpperCase() === TRANSACTION_STATUS.SUCCESS) {
-      await this.creditWallet(
-        transactionDetails.amount,
-        transactionDetails.userId
-      );
-      await this.debitUtilityWallet(transactionDetails.amount);
-      transactionDetails.status = status.toUpperCase();
-      await transactionDetails.save();
-    }
-    return transactionDetails;
-  }
+  // async verifyFundTransfer() {
+  //   const { status } = await verifyPayment(this.data);
+  //   const transactionDetails = await new Transaction(
+  //     this.data
+  //   ).getTransactionByReference();
+  //   if (status.toUpperCase() === TRANSACTION_STATUS.SUCCESS) {
+  //     await this.creditWallet(
+  //       transactionDetails.amount,
+  //       transactionDetails.userId
+  //     );
+  //     await this.debitUtilityWallet(transactionDetails.amount);
+  //     transactionDetails.status = status.toUpperCase();
+  //     await transactionDetails.save();
+  //   }
+  //   return transactionDetails;
+  // }
+
 
   static async creditUtilityWallet(amount) {
     const utilityWallet = await this.getUtilityWallet();
@@ -158,5 +162,7 @@ class Wallet {
     return await utilityWallet.save();
   }
 }
+
+
 
 module.exports = Wallet;

@@ -43,7 +43,7 @@ exports.initiatePaymentFlutterwave = async (
         user_id: userId,
       },
     });
-
+       console.log(data)
     var config = {
       method: "post",
       url: "https://api.flutterwave.com/v3/payments",
@@ -69,5 +69,12 @@ exports.initiatePaymentFlutterwave = async (
   } catch (err) {
     console.log(err.code);
     console.log(err.response.body);
+  }
+};
+
+
+exports.flutterPaymentCallback =  async (req,res) => {
+  if (req.query.status === 'successful') {
+    console.log(req.query)  
   }
 };

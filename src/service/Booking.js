@@ -209,6 +209,7 @@ class Booking {
       bookingEmail(
         booking.bookingUserId.fullName,
         booking.bookingUserId.email,
+        booking.bookingUserId.phonenumber,
         booking.apartmentId.apartmentName,
         booking.checkInDate,
         booking.checkOutDate,
@@ -227,7 +228,7 @@ class Booking {
       );
       return await booking.save();
     } else if (paymentMethod === "FLUTTERWAVE") {
-    const amount = booking.bookingAmount * 100;
+    const amount = booking.bookingAmount;
      
   //   await initializePayment();
   //     const { reference, confirmationUrl,status} = await initializePayment(
@@ -260,7 +261,7 @@ class Booking {
       // await booking.save();
       // return booking.paystackUrl;
 
-     let checkOut = await initiatePaymentFlutterwave(amount, booking.bookingUserId.email, '0909929394', booking.bookingUserId.fullName, userId)
+     let checkOut = await initiatePaymentFlutterwave(amount, booking.bookingUserId.email, booking.bookingUserId.phonenumber, booking.bookingUserId.fullName, userId)
      return  checkOut.data.link;
    
    
