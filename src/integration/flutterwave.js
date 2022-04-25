@@ -1,46 +1,36 @@
 // /*eslint-disable*/
-// const axios = require("axios");
-// const got =require("got")
-// const { error, success } = require("../utils/baseController");
-// const FLW_SECRET_KEY = require("../core/config");
-
-//     // const response = await axios.post(
-//     //     "https://api.flutterwave.com/v3/payments",
-//     //     {
-//     //         "headers": { "Authorization": `Bearer ${process.env.FLW_SECRET_KEY}` },
-//     //     },payload
-
-//     // );
-
-// // } catch (err) {
-// //     console.log ("<<<<<<<",err)
-// //     console.log(err);
-// //    console.log(err.response.body);
-// //}
-
 var axios = require("axios");
-const FLW_SECRET_KEY = require("../core/config");
+const keys = require("../core/config");
+const FlutterSchema = require("../models/flutterModel")
+const Flutterwave = require('flutterwave-node-v3');
+const flw = new Flutterwave(process.env.FLW_PUBLIC_KEY, process.env.FLW_SECRET_KEY);
+
+
 
 exports.initiatePaymentFlutterwave = async (
   amount,
   email,
   phone,
   name,
-  userId
+  userId,
+  bookingId,
 ) => {
+  console.log("I ran",bookingId,amount, email,userId);
   try {
-    var data = JSON.stringify({
+    let data = JSON.stringify({
       tx_ref: "PS_" + Math.floor(Math.random() * 100000000 + 1),
       amount: amount,
       currency: "NGN",
-      redirect_url: "https://webhook.site/9d0b00ba-9a69-44fa-a43d-a82c33c36fdc",
+      redirect_url: `${keys.BACKEND_BASE_URL}/flutterResponse?amount=${amount}`,
       customer: {
         email: email,
         phonenumber: phone,
         name: name,
       },
       meta: {
+        booking_id: bookingId,
         user_id: userId,
+        
       },
     });
        console.log(data)
@@ -56,11 +46,6 @@ exports.initiatePaymentFlutterwave = async (
 
    return axios(config)
       .then(function (response) {
-        console.log("==========Inside Payment");
-        //  console.log( { reference: response.data.tx_ref,
-        //            confirmationUrl: response.data.redirect_url,
-        //            userId: response.data.meta.user_id,
-        //   });
         return response.data;
       })
       .catch(function (error) {
@@ -68,7 +53,6 @@ exports.initiatePaymentFlutterwave = async (
       });
   } catch (err) {
     console.log(err.code);
-    console.log(err.response.body);
   }
 };
 
@@ -78,3 +62,29 @@ exports.flutterPaymentCallback =  async (req,res) => {
     console.log(req.query)  
   }
 };
+
+exports.flutterResponse = async (req , res) => {
+  const { amount, status, tx_ref, transaction_id} = req.query
+  // const flutterDetails = await FlutterSchema.create({
+  //   amount, 
+  //   status, 
+  //   tx_ref, 
+  //   transaction_id
+  // }); 
+  // flutterDetails.save()
+flw.Transaction.verify({ id: transaction_id })
+    .then((response) => {
+      console.log(response)
+      if (
+            response.data.status === "successful"
+            && response.data.amount === amount
+            && response.data.currency === 'NGN') {
+            // Success! Confirm the customer's payment
+            console.log("Payment Successful")
+        } else {
+            // Inform the customer their payment was unsuccessful
+            console.log("Payment Failed")
+        }
+    })
+    .catch(console.log);
+  }

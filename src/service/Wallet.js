@@ -137,23 +137,23 @@ class Wallet {
     return  checkOut.data.link;
   }
 
-  // verify fund transfer
-  // async verifyFundTransfer() {
-  //   const { status } = await verifyPayment(this.data);
-  //   const transactionDetails = await new Transaction(
-  //     this.data
-  //   ).getTransactionByReference();
-  //   if (status.toUpperCase() === TRANSACTION_STATUS.SUCCESS) {
-  //     await this.creditWallet(
-  //       transactionDetails.amount,
-  //       transactionDetails.userId
-  //     );
-  //     await this.debitUtilityWallet(transactionDetails.amount);
-  //     transactionDetails.status = status.toUpperCase();
-  //     await transactionDetails.save();
-  //   }
-  //   return transactionDetails;
-  // }
+  //verify fund transfer
+  async verifyFundTransfer() {
+    const { status } = await verifyPayment(this.data);
+    const transactionDetails = await new Transaction(
+      this.data
+    ).getTransactionByReference();
+    if (status.toUpperCase() === TRANSACTION_STATUS.SUCCESS) {
+      await this.creditWallet(
+        transactionDetails.amount,
+        transactionDetails.userId
+      );
+      await this.debitUtilityWallet(transactionDetails.amount);
+      transactionDetails.status = status.toUpperCase();
+      await transactionDetails.save();
+    }
+    return transactionDetails;
+  }
 
 
   static async creditUtilityWallet(amount) {

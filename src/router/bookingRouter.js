@@ -62,7 +62,7 @@ bookingRoute
 
 // verify booking payment
 bookingRoute
-  .route("/bookings/verify-payment/:reference")
+  .route("/bookings/verify-payment/:bookingOrderId")
   .get(
     authenticate,
     permit([USER_TYPE.USER]),

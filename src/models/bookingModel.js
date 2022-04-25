@@ -55,13 +55,14 @@ const bookingSchema = new Schema(
       type: Date,
       default: Date.now(),
     },
-    paystackReference: {
-      type: String,
-    },
-    paystackUrl: {
-      type: String,
-    },
-    // tx_ref: {
+  
+    // paystackReference: {
+    //   type: String,
+    // },
+    // paystackUrl: {
+    //   type: String,
+    // },
+    // flutterReference: {
     //   type: String,
     // },
     // redirect_url: {

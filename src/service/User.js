@@ -64,7 +64,7 @@ class User {
       if (!otp) {
         throwError("OTP Required To Complete Signup");
       }
-      // const cachedOTP = await getCachedData(this.data.email);
+    // const cachedOTP = await getCachedData(this.data.email);
       // if (!cachedOTP) {
       //   throwError("OTP Code Expired");
       // } else if (cachedOTP !== otp) {

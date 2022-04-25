@@ -107,10 +107,13 @@ exports.payForPendingBooking = async (req, res) => {
 // verify booking payment
 exports.verifyBookingPayment = async (req, res) => {
   try {
-    const booking = await new Booking(req.params.reference).verifyBooking();
+    const booking = await new Booking(req.params.bookingOrderId).verifyBooking();
     return success(res, { booking });
   } catch (err) {
     logger.error("Unable to verify booking payment", err);
     return error(res, { code: err.code, message: err.message });
   }
-}
+    
+    }
+
+

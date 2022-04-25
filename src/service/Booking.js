@@ -4,6 +4,7 @@ const axios = require("axios");
 const { throwError } = require("../utils/handleErrors");
 const { validateParameters } = require("../utils/util");
 const BookingSchema = require("../models/bookingModel");
+const FlutterSchema = require("../models/flutterModel");
 const {
   BOOKING_STATUS,
   NOTIFICATION_TYPE,
@@ -17,7 +18,7 @@ const {
   initiatePayment,
   verifyPayment,
 } = require("../integration/paystackClient");
-const { initiatePaymentFlutterwave } = require('../integration/flutterwave')
+const { initiatePaymentFlutterwave} = require('../integration/flutterwave')
 const { bookingEmail } = require("../utils/sendgrid");
 
 
@@ -229,117 +230,20 @@ class Booking {
       return await booking.save();
     } else if (paymentMethod === "FLUTTERWAVE") {
     const amount = booking.bookingAmount;
-     
-  //   await initializePayment();
-  //     const { reference, confirmationUrl,status} = await initializePayment(
-  //        booking.bookingUserId.email,
-  //        amount
-       
-  //     );
-  //     booking.paystackReference = reference;
-  //     booking.paystackUrl = confirmationUrl;
-  //     if (status === success) {
-  //       booking.paymentStatus = PAYMENT_STATUS.SUCCESS;
-  //     }
-  //     booking.bookingOrderId = "BK" + Date.now().valueOf() + "REF";
-  //     await booking.save();
-  //     return booking.paystackUrl;
-  //   }
-  // }
-      //await initializePayment();
-      // const { reference,confirmationUrl,status} = await initializePayment(
-      //    booking.bookingUserId.email,
-      //    amount
-       
-      // );
-      // booking.paystackReference = reference;
-      // booking.paystackUrl = confirmationUrl;
-      // if (userId === bookingUserId) {
-      //   booking.paymentStatus = PAYMENT_STATUS.SUCCESS;
-      // }
-      // booking.bookingOrderId = "BK" + Date.now().valueOf() + "REF";
-      // await booking.save();
-      // return booking.paystackUrl;
-
-     let checkOut = await initiatePaymentFlutterwave(amount, booking.bookingUserId.email, booking.bookingUserId.phonenumber, booking.bookingUserId.fullName, userId)
-     return  checkOut.data.link;
-   
-   
+    // console.log("This a test",booking._id);
+      try{
+        let checkOut = await initiatePaymentFlutterwave(amount, booking.bookingUserId.email, booking.bookingUserId.phonenumber, booking.bookingUserId.fullName, booking._id)
+        console.log(booking._id)
+        return  checkOut.data.link;
+      }catch(e) {
+        // console.log(e)
+      }
     }
   }
-  async verifyBooking() {
-    const booking = await BookingSchema.findOne({
-      paystackReference: this.data,
-    })
-      .populate(
-        "apartmentId bookingUserId apartmentOwnerId",
-        "apartmentName profilePicture apartmentImages _id userId email fullName companyName"
-      )
-      .orFail(() => {
-        throwError(`Booking not found`, 404);
-      });
-    const { status, paymentDate } = await verifyPayment(this.data);
-    if ((booking.paymentStatus = status.toUpperCase())) {
-      if (booking.paymentStatus === "SUCCESS") {
-        booking.paymentDate = paymentDate;
-        booking.bookingStatus = BOOKING_STATUS.CONFIRMED;
-        const transactionDetails = {
-          userId: booking.bookingUserId,
-          amount: booking.bookingAmount,
-          reason: "Booking payment",
-          type: TRANSACTION_TYPE.WITHDRAWAL,
-          reference: "WD" + Date.now().valueOf() + "REF",
-          paymentDate,
-        };
-        await Transaction.createTransaction(transactionDetails);
-        const notificationDetailsUser = {
-          bookingUserId: booking.bookingUserId,
-          bookingId: booking._id,
-          message: `${booking.apartmentId.apartmentName} booking has been confirmed`,
-          image: booking.apartmentId.apartmentImages[0],
-          price: booking.bookingAmount,
-          apartmentId: booking.apartmentId._id,
-          notificationType: NOTIFICATION_TYPE.BOOKING_CONFIRMED,
-        };
-        Notification.createNotification(notificationDetailsUser);
-        const notificationDetailsBusinessAndIndividual = {
-          apartmentOwnerId: booking.apartmentId.userId,
-          bookingId: booking._id,
-          message: `${booking.apartmentId.apartmentName} booking has been confirmed`,
-          image: booking.apartmentId.apartmentImages[0],
-          price: booking.bookingAmount,
-          apartmentId: booking.apartmentId._id,
-          notificationType: NOTIFICATION_TYPE.BOOKING_CONFIRMED,
-        };
-        Notification.createNotification(
-          notificationDetailsBusinessAndIndividual
-        );
-        bookingEmail(
-          booking.bookingUserId.fullName,
-          booking.bookingUserId.email,
-          booking.apartmentId.apartmentName,
-          booking.checkInDate,
-          booking.checkOutDate,
-          booking.bookingAmount,
-          booking.bookingOrderId
-        );
-        bookingEmail(
-          booking.apartmentOwnerId.fullName ||
-            booking.apartmentOwnerId.companyName,
-          booking.apartmentOwnerId.email,
-          booking.apartmentId.apartmentName,
-          booking.checkInDate,
-          booking.checkOutDate,
-          booking.bookingAmount,
-          booking.bookingOrderId
-        );
-        await booking.save();
-      }
-      return booking;
-    } else {
-      throwError(`Payment failed Please Try again`, 400);
-    }
+   
+async verifyBooking() {
+ 
+  
   }
 }
-
 module.exports = Booking;
