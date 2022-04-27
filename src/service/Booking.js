@@ -232,7 +232,7 @@ class Booking {
     const amount = booking.bookingAmount;
     // console.log("This a test",booking._id);
       try{
-        let checkOut = await initiatePaymentFlutterwave(amount, booking.bookingUserId.email, booking.bookingUserId.phonenumber, booking.bookingUserId.fullName, booking._id)
+        let checkOut = await initiatePaymentFlutterwave(amount, booking.bookingUserId.email, booking.bookingUserId.phonenumber, booking.bookingUserId.fullName,booking.bookingUserId,booking._id)
         console.log(booking._id)
         return  checkOut.data.link;
       }catch(e) {

@@ -15,7 +15,7 @@ exports.initiatePaymentFlutterwave = async (
   userId,
   bookingId,
 ) => {
-  console.log("I ran",bookingId,amount, email,userId);
+  console.log("I ran",amount,email,phone,name,userId,bookingId);
   try {
     let data = JSON.stringify({
       tx_ref: "PS_" + Math.floor(Math.random() * 100000000 + 1),
