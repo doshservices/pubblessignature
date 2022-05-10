@@ -6,10 +6,10 @@ const util = require("../utils/util");
 const { validateParameters } = require("../utils/util");
 // const { getCachedData } = require("../service/Redis");
 const Wallet = require("./Wallet");
-const Apartment = require("./Apartment");
-
+// const Apartment = require("./Apartment");
 const WalletSchema = require("../models/walletModel");
 const ApartmentSchema = require("../models/apartmentModel");
+const ApartmentWishlistSchema = require("../models/apartmentWishlistModel");
 const {
   sendResetPasswordToken,
   SuccessfulPasswordReset,
@@ -232,14 +232,14 @@ class User {
     );
   }
 
-  // // user can see all active and available apartments
-  // async getActiveApartment() {
-  //   const apartments = await ApartmentSchema.find({
-  //     isAvailable: true,
-  //     isActive: true,
-  //   });
-  //   return apartments;
-  // }
+  // user can see all active and available apartments
+  async getActiveApartment() {
+    const apartments = await ApartmentSchema.find({
+      isAvailable: true,
+      isActive: true,
+    });
+    return apartments;
+  }
 
   // get user by id
   async getUser() {
@@ -250,12 +250,38 @@ class User {
 
   //get user dashboard apartment details
   async getUserDashboardData() {
-    const { apartmentId, userId } = this.data;
-    const check = ApartmentWishlistSchema.find({ apartmentId, userId });
-    if (check) {
-      ApartmentWishlistSchema(this.data).save();
-    }
-    return db.apartmentwishlists.find({ apartmentId, userId }).count();
+
+    //get all booked apartments by logged in user
+    const bookedApartment = await ApartmentSchema.find({
+      isAvailable: false,
+      userId: this.data,
+    }).countDocuments();
+
+    //get all available apartment by logged in user
+    const availableApartment = await ApartmentSchema.find({
+      isAvailable: true,
+    }).countDocuments();
+
+    //get all wishlisted or saved apartments by loged in user
+    const wishlistedApartment = await ApartmentWishlistSchema.find({
+      userId: this.data
+    }).countDocuments();
+    
+
+    //get all active apartment by logged in user
+    const activeApartments = await ApartmentSchema.find({
+      isAvailable: true,
+      isActive: true,
+    }).countDocuments();
+
+    const data = {
+      all_booked_apartment: bookedApartment,
+      all_available_apartment: availableApartment,
+      all_saved_apartments: wishlistedApartment,
+      all_active_apartments: activeApartments,
+    };
+
+    return data;
   }
 }
 

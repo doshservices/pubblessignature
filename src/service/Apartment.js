@@ -130,7 +130,6 @@ class Apartment {
 
     if (!apartment_name) {
       let query = {
-        // apartmentName: apartment_name.toLowerCase(),
         address: address,
         apartmentCountry: country.toLowerCase(),
         apartmentState: state.toLowerCase(),
@@ -142,7 +141,6 @@ class Apartment {
     if (!address) {
       let query = {
         apartmentName: apartment_name.toLowerCase(),
-        // address: address,
         apartmentCountry: country.toLowerCase(),
         apartmentState: state.toLowerCase(),
         typeOfApartment: type.toLowerCase(),
@@ -154,7 +152,6 @@ class Apartment {
       let query = {
         apartmentName: apartment_name.toLowerCase(),
         address: address,
-        // apartmentCountry: country.toLowerCase(),
         apartmentState: state.toLowerCase(),
         typeOfApartment: type.toLowerCase(),
         isAvailable: true,
@@ -166,7 +163,6 @@ class Apartment {
         apartmentName: apartment_name.toLowerCase(),
         address: address,
         apartmentCountry: country.toLowerCase(),
-        // apartmentState: state.toLowerCase(),
         typeOfApartment: type.toLowerCase(),
         isAvailable: true,
       };
@@ -178,7 +174,6 @@ class Apartment {
         address: address,
         apartmentCountry: country.toLowerCase(),
         apartmentState: state.toLowerCase(),
-        // typeOfApartment: type.toLowerCase(),
         isAvailable: true,
       };
     }
@@ -209,7 +204,6 @@ class Apartment {
   //check apartment availability
   async checkApartmentAvailability() {
     const { apartmentId } = this.data;
-    // console.log("this is", apartmentId)
     const apartmentBooking = await BookingSchema.findOne({
       apartmentId: apartmentId,
     });
@@ -226,6 +220,12 @@ class Apartment {
     const bookedApartment = await ApartmentSchema.find({ isAvailable: false });
     return bookedApartment;
   }
+
+    //get all Available apartments
+    async getAllAvailableApartment() {
+      const availableApartment = await ApartmentSchema.find({ isAvailable: true });
+      return availableApartment;
+    }
 }
 
 module.exports = Apartment;

@@ -163,7 +163,7 @@ exports.getActiveApartment = async (req, res) => {
 // get all user dashboard data
 exports.userDashboardData = async (req, res) => {
   try {
-    const dashboardData = await new User().getUserDashboardData();
+    const dashboardData = await new User(req.user._id).getUserDashboardData();
     return success(res, { dashboardData });
   } catch (err) {
     logger.error("Unable to complete request", err);

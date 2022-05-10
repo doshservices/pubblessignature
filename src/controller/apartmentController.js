@@ -155,7 +155,17 @@ exports.getAllBookedApartment = async (req, res) => {
     console.log("**********************", apartments);
     return success(res, "success", apartments);
   } catch (err) {
-    logger.error("Unable to get all active apartments", err);
+    logger.error("Unable to get all booked apartments", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
+// get all the available apartments
+exports.getAllAvailableApartment = async (req, res) => {
+  try {
+    const apartments = await new Apartment(req.params).getAllAvailableApartment();
+    return success(res, "success", apartments);
+  } catch (err) {
+    logger.error("Unable to get all available apartments", err);
     return error(res, { code: err.code, message: err.message });
   }
 };

@@ -69,6 +69,11 @@ apartmentRoute
  .get(apartmentController.getAllBookedApartment
  );
 
+// get all available apartments 
+apartmentRoute
+.route("/apartments/availableapartments")
+.get(apartmentController.getAllAvailableApartment
+);
 
  
  // get apartment by id
