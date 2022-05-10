@@ -13,9 +13,8 @@ exports.signup = async (req, res) => {
       isVerified: newUser.isVerified,
       role: newUser.role,
     });
-    return success(res, {newUser, token});
+    return success(res, { newUser, token });
   } catch (err) {
-    console.log(err)
     logger.error("Error occurred at signup", err);
     return error(res, { code: err.code, message: err });
   }
@@ -24,7 +23,7 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const userDetails = await new User(req.body).login();
-    console.log(req.body)
+    console.log(req.body);
     const token = await generateAuthToken({
       userId: userDetails._id,
       isVerified: userDetails.isVerified,
@@ -45,7 +44,7 @@ exports.createAdmin = async (req, res) => {
       isVerified: newUser.isVerified,
       role: newUser.role,
     });
-    return success(res, {newUser, token});
+    return success(res, { newUser, token });
   } catch (err) {
     logger.error("Error occurred at signup", err);
     return error(res, { code: err.code, message: err });
@@ -161,11 +160,22 @@ exports.getActiveApartment = async (req, res) => {
   }
 };
 
+// get all user dashboard data
+exports.userDashboardData = async (req, res) => {
+  try {
+    const dashboardData = await new User().getUserDashboardData();
+    return success(res, { dashboardData });
+  } catch (err) {
+    logger.error("Unable to complete request", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
+
 // get user by id
 exports.getUser = async (req, res) => {
   try {
     const user = await new User(req.params.id).getUser();
-    console.log(user)
+    console.log(user);
     return success(res, { user });
   } catch (err) {
     logger.error("Unable to complete request", err);

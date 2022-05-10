@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const bookingId = require("../models/flutterModel")
 const uniqueValidator = require("mongoose-unique-validator");
 const { BOOKING_STATUS, PAYMENT_STATUS } = require("../utils/constants");
 
@@ -55,19 +56,12 @@ const bookingSchema = new Schema(
       type: Date,
       default: Date.now(),
     },
-  
-    // paystackReference: {
-    //   type: String,
-    // },
-    // paystackUrl: {
-    //   type: String,
-    // },
-    // flutterReference: {
-    //   type: String,
-    // },
-    // redirect_url: {
-    //   type: String,
-    // },
+    bookingId: {
+      type: String,
+      ref: "Flutter",
+      required: true,
+      index: true,
+    },
     paymentMethod: {
       type: String,
     },

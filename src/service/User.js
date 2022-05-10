@@ -6,18 +6,20 @@ const util = require("../utils/util");
 const { validateParameters } = require("../utils/util");
 // const { getCachedData } = require("../service/Redis");
 const Wallet = require("./Wallet");
-const WalletSchema = require('../models/walletModel')
+const Apartment = require("./Apartment");
+
+const WalletSchema = require("../models/walletModel");
 const ApartmentSchema = require("../models/apartmentModel");
 const {
   sendResetPasswordToken,
   SuccessfulPasswordReset,
 } = require("../utils/sendgrid");
-const {ADMIN_ROLES, USER_TYPE } = require("../utils/constants");
+const { ADMIN_ROLES, USER_TYPE } = require("../utils/constants");
 
 class User {
   constructor(data) {
     this.data = data;
-    console.log(data)
+    console.log(data);
     this.errors = [];
   }
 
@@ -60,16 +62,10 @@ class User {
       throwError(messages);
     }
     if (this.data.googleSigned === "false") {
-      console.log(this.data)
+      console.log(this.data);
       if (!otp) {
         throwError("OTP Required To Complete Signup");
       }
-    // const cachedOTP = await getCachedData(this.data.email);
-      // if (!cachedOTP) {
-      //   throwError("OTP Code Expired");
-      // } else if (cachedOTP !== otp) {
-      //   throwError("Invalid OTP");
-      // }
     }
     await Promise.all([this.emailExist(), this.phoneNumberExist()]);
     if (this.errors.length) {
@@ -100,22 +96,20 @@ class User {
     }
     return await UserSchema.findByCredentials(loginId, password);
   }
-  
 
   async createAdmin() {
     const otp = this.data.otp;
     const { isValid, messages } = validateParameters(
-        ["phoneNumber", "email", "password"],
-        this.data
-       );
-       console.log("i ran",this.data)
+      ["phoneNumber", "email", "password"],
+      this.data
+    );
+    console.log("i ran", this.data);
     if (!isValid) {
-     
-        throwError(messages);
-      }
-      if (this.data.googleSigned === "false") {
-        if (!otp) {
-          throwError("OTP Required To Complete Signup");
+      throwError(messages);
+    }
+    if (this.data.googleSigned === "false") {
+      if (!otp) {
+        throwError("OTP Required To Complete Signup");
       }
       await Promise.all([this.emailExist(), this.phoneNumberExist()]);
       if (this.errors.length) {
@@ -128,7 +122,6 @@ class User {
       return newUser;
     }
   }
-
 
   static async getAllUser() {
     return await UserSchema.find()
@@ -224,7 +217,7 @@ class User {
   //delete a user from the database
   async deleteUser() {
     //delete user wallet
-    const wallet = await ({ userId: this.data });
+    const wallet = await { userId: this.data };
     if (wallet) {
       await wallet.remove();
     }
@@ -239,20 +232,30 @@ class User {
     );
   }
 
-  // user can see all active and available apartments
-  async getActiveApartment() {
-    const apartments = await ApartmentSchema.find({
-      isAvailable: true,
-      isActive: true,
-    });
-    return apartments;
-  }
+  // // user can see all active and available apartments
+  // async getActiveApartment() {
+  //   const apartments = await ApartmentSchema.find({
+  //     isAvailable: true,
+  //     isActive: true,
+  //   });
+  //   return apartments;
+  // }
 
   // get user by id
   async getUser() {
     return await UserSchema.findById(this.data).orFail(() =>
       throwError("User Not Found", 404)
     );
+  }
+
+  //get user dashboard apartment details
+  async getUserDashboardData() {
+    const { apartmentId, userId } = this.data;
+    const check = ApartmentWishlistSchema.find({ apartmentId, userId });
+    if (check) {
+      ApartmentWishlistSchema(this.data).save();
+    }
+    return db.apartmentwishlists.find({ apartmentId, userId }).count();
   }
 }
 

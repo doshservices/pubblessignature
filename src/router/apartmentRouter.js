@@ -15,7 +15,7 @@ apartmentRoute
  // get all apartments 
  apartmentRoute
  .route("/apartments/all-apartments")
- .get(authenticate, apartmentController.getAllApartment
+ .get(apartmentController.getAllApartment
  );
 
 // get user apartment
@@ -25,31 +25,6 @@ apartmentRoute
     authenticate,
     permit([USER_TYPE.BUSINESS, USER_TYPE.INDIVIDUAL]),
     apartmentController.getUserApartment
-  );
-
-// get apartment by id
-apartmentRoute
-  .route("/apartments/:id")
-  .get(authenticate, apartmentController.getApartmentById
-  );
-
- 
-// delete apartment by id
-apartmentRoute
-  .route("/apartments/:id")
-  .delete(
-    authenticate,
-    permit([USER_TYPE.BUSINESS, USER_TYPE.INDIVIDUAL]),
-    apartmentController.deleteApartment
-  );
-
-// update apartment by id
-apartmentRoute
-  .route("/apartments/:id")
-  .put(
-    authenticate,
-    permit([USER_TYPE.BUSINESS, USER_TYPE.INDIVIDUAL]),
-    apartmentController.updateApartment
   );
 
 // user can make apartment not available
@@ -70,5 +45,58 @@ apartmentRoute
 apartmentRoute
   .route("/apartments/near/you")
   .get(authenticate, apartmentController.getApartmentsNearYou);
+
+//save apartment
+  apartmentRoute
+  .route("/apartments/save-apartment")
+  .post(
+    authenticate,
+    permit(([USER_TYPE.USER])),
+    apartmentController.saveApartment
+  );
+
+  //check apartment availability
+apartmentRoute
+.route("/apartments/is-available")
+.post(
+  authenticate,
+ apartmentController.checkApartmentAvailability
+);
+
+ // get all booked apartments 
+ apartmentRoute
+ .route("/apartments/bookedapartments")
+ .get(apartmentController.getAllBookedApartment
+ );
+
+
+ 
+ // get apartment by id
+apartmentRoute
+.route("/apartments/:id")
+.get(authenticate, apartmentController.getApartmentById
+);
+
+
+// delete apartment by id
+apartmentRoute
+.route("/apartments/:id")
+.delete(
+  authenticate,
+  permit([USER_TYPE.BUSINESS, USER_TYPE.INDIVIDUAL]),
+  apartmentController.deleteApartment
+);
+
+// update apartment by id
+apartmentRoute
+.route("/apartments/:id")
+.put(
+  authenticate,
+  permit([USER_TYPE.BUSINESS, USER_TYPE.INDIVIDUAL]),
+  apartmentController.updateApartment
+);
+
+
+
 
 module.exports = apartmentRoute;

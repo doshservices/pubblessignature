@@ -1,14 +1,14 @@
 const flutterRoute = require("../core/routerConfig");
-const {flutterPaymentCallback, flutterResponse} = require("../integration/flutterwave")
+const Flutter = require("../integration/flutterwave")
 
 
 flutterRoute
 .route('/verifyFlutterPayment')
-.get(flutterPaymentCallback);
+.get(Flutter.flutterPaymentCallback);
 
 flutterRoute
 .route('/flutterResponse')
-.get(flutterResponse);
+.get(Flutter.flutterResponse);
 
 
 module.exports = flutterRoute

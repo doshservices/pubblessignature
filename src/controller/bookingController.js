@@ -2,14 +2,14 @@ const { error, success } = require("../utils/baseController");
 const { logger } = require("../utils/logger");
 const Booking = require("../service/Booking");
 
-// create event
+// create booking
 exports.createBooking = async (req, res) => {
   try {
     req.body["bookingUserId"] = req.user._id;
-    console.log(req.user)
-   let newBooking= await new Booking(req.body).createBooking();
-      return success(res,newBooking, "Booking Created Successfully");
-  //  return success({ res, status: 'success', message: "Booking Created Successfully" });
+    console.log(req.user);
+    let newBooking = await new Booking(req.body).createBooking();
+    return success(res, newBooking, "Booking Created Successfully");
+    //  return success({ res, status: 'success', message: "Booking Created Successfully" });
   } catch (err) {
     logger.error("Unable to create booking", err);
     return error(res, { code: err.code, message: err.message });
@@ -17,10 +17,10 @@ exports.createBooking = async (req, res) => {
 };
 
 // get all bookings
-exports.getAllBookings = async (req, res) => { 
+exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await new Booking().getAllBookings();
-    return success(res,'success' , bookings);
+    return success(res, "success", bookings);
   } catch (err) {
     logger.error("Unable to get all bookings", err);
     return error(res, { code: err.code, message: err.message });
@@ -107,13 +107,13 @@ exports.payForPendingBooking = async (req, res) => {
 // verify booking payment
 exports.verifyBookingPayment = async (req, res) => {
   try {
-    const booking = await new Booking(req.params.bookingOrderId).verifyBooking();
+    const bookingId = req.query.bookingId;
+    const booking = await new Booking({
+      bookingId,
+    }).verifyBooking({ bookingId });
     return success(res, { booking });
   } catch (err) {
     logger.error("Unable to verify booking payment", err);
     return error(res, { code: err.code, message: err.message });
   }
-    
-    }
-
-
+};

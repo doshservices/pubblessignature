@@ -1,8 +1,12 @@
 /*eslint-disable*/
 const ApartmentSchema = require("../models/apartmentModel");
+const BookingSchema = require("../models/bookingModel");
+const UserSchema = require("../models/userModel");
+const ApartmentWishlistSchema = require("../models/apartmentWishlistModel");
 const { throwError } = require("../utils/handleErrors");
 const { validateParameters } = require("../utils/util");
 const util = require("../utils/util");
+const { verifyBooking } = require("./Booking");
 
 class Apartment {
   constructor(data) {
@@ -114,32 +118,72 @@ class Apartment {
 
   // search apartments
   async searchApartments() {
+    const {
+      state,
+      type,
+      check_in,
+      check_out,
+      address,
+      country,
+      apartment_name,
+    } = this.data;
 
-    let query = { isAvailable: true };
+    if (!apartment_name) {
+      let query = {
+        // apartmentName: apartment_name.toLowerCase(),
+        address: address,
+        apartmentCountry: country.toLowerCase(),
+        apartmentState: state.toLowerCase(),
+        typeOfApartment: type.toLowerCase(),
+        isAvailable: true,
+      };
+    }
 
-    let apartmentSearch = this.data;
-    query.$or = [
-      {
-        apartmentName: { $regex: apartmentSearch.toLowerCase(), $options: "i" },
-      },
-      { address: { $regex: apartmentSearch, $options: "i" } },
-      {
-        apartmentCountry: {
-          $regex: apartmentSearch.toLowerCase(),
-          $options: "i",
-        },
-      },
-      {
-        apartmentState: {
-          $regex: apartmentSearch.toLowerCase(),
-          $options: "i",
-        },
-      },
-      { typeOfApartment: { $regex: apartmentSearch, $options: "i" } },
-      { facilities: { $regex: apartmentSearch, $options: "i" } },
-      { dateList: { $in: [apartmentSearch] } },
-    ];
-    return await ApartmentSchema.find(query);
+    if (!address) {
+      let query = {
+        apartmentName: apartment_name.toLowerCase(),
+        // address: address,
+        apartmentCountry: country.toLowerCase(),
+        apartmentState: state.toLowerCase(),
+        typeOfApartment: type.toLowerCase(),
+        isAvailable: true,
+      };
+    }
+
+    if (!country) {
+      let query = {
+        apartmentName: apartment_name.toLowerCase(),
+        address: address,
+        // apartmentCountry: country.toLowerCase(),
+        apartmentState: state.toLowerCase(),
+        typeOfApartment: type.toLowerCase(),
+        isAvailable: true,
+      };
+    }
+
+    if (!state) {
+      let query = {
+        apartmentName: apartment_name.toLowerCase(),
+        address: address,
+        apartmentCountry: country.toLowerCase(),
+        // apartmentState: state.toLowerCase(),
+        typeOfApartment: type.toLowerCase(),
+        isAvailable: true,
+      };
+    }
+
+    if (!type) {
+      let query = {
+        apartmentName: apartment_name.toLowerCase(),
+        address: address,
+        apartmentCountry: country.toLowerCase(),
+        apartmentState: state.toLowerCase(),
+        // typeOfApartment: type.toLowerCase(),
+        isAvailable: true,
+      };
+    }
+
+    return ApartmentSchema.find(query);
   }
 
   // get a all apartment near you based on location state and country
@@ -149,6 +193,38 @@ class Apartment {
       apartmentCountry,
       apartmentState,
     }).orFail(() => throwError("No Apartment Found", 404));
+  }
+
+  //wishlist apartment
+  async saveApartment() {
+    const { apartmentId, userId } = this.data;
+    const check = ApartmentWishlistSchema.find({ apartmentId, userId });
+    if (check) {
+      throwError("Apartment already saved for later");
+    } else {
+      return ApartmentWishlistSchema(this.data).save();
+    }
+  }
+
+  //check apartment availability
+  async checkApartmentAvailability() {
+    const { apartmentId } = this.data;
+    // console.log("this is", apartmentId)
+    const apartmentBooking = await BookingSchema.findOne({
+      apartmentId: apartmentId,
+    });
+    if (!apartmentBooking.isBooked) {
+      throwError("Apartment already booked");
+      console.log(apartmentBooking.isBooked);
+    } else {
+      return "Apartment is available to be booked";
+    }
+  }
+
+  //get all Booked apartments
+  async getAllBookedApartment() {
+    const bookedApartment = await ApartmentSchema.find({ isAvailable: false });
+    return bookedApartment;
   }
 }
 

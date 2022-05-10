@@ -12,7 +12,6 @@ exports.createApartment = async (req, res) => {
     await new Apartment(req.body).createApartment();
     return success(res, { message: "Apartment Created Successfully" });
   } catch (err) {
-  
     logger.error("Unable to complete host update request", err);
     return error(res, { code: err.code, message: err.message });
   }
@@ -28,10 +27,10 @@ exports.getUserApartment = async (req, res) => {
   }
 };
 
-exports.getAllApartment = async (req, res) => { 
+exports.getAllApartment = async (req, res) => {
   try {
     const apartments = await new Apartment().getAllApartment();
-    return success(res,'success' , apartments);
+    return success(res, "success", apartments);
   } catch (err) {
     logger.error("Unable to get all apartments", err);
     return error(res, { code: err.code, message: err.message });
@@ -94,10 +93,8 @@ exports.makeApartmentNotAvailable = async (req, res) => {
 // search apartments
 exports.searchApartments = async (req, res) => {
   try {
-    console.log('apartmentSearch  ',req.params)
-    const apartments = await new Apartment(
-      req.query.apartmentSearch
-    ).searchApartments();
+    console.log("params is  ", req.query);
+    const apartments = await new Apartment(req.query).searchApartments();
     return success(res, { apartments });
   } catch (err) {
     logger.error("Unable to get all apartments", err);
@@ -112,15 +109,53 @@ exports.getApartmentsNearYou = async (req, res) => {
     const apartmentCountry = user.country.toLowerCase() || "nigeria";
     console.log(user.country);
     const apartmentState = user.state.toLowerCase() || "lagos";
-    console.log(user.state)
+    console.log(user.state);
     const apartments = await new Apartment({
       apartmentCountry,
       apartmentState,
     }).getApartmentsNearYou();
     return success(res, { apartments });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     logger.error("Unable to get all apartments", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
+
+// save apartment
+exports.saveApartment = async (req, res) => {
+  try {
+    req.body["userId"] = req.user._id;
+    // console.log(req.user._id);
+    await new Apartment(req.body).saveApartment();
+    return success(res, { message: "Apartment Saved Successfully" });
+  } catch (err) {
+    logger.error("Unable to save Apartment", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
+
+exports.checkApartmentAvailability = async (req, res) => {
+  try {
+    req.body["userId"] = req.user._id;
+    console.log(req.user._id);
+    await new Apartment(req.body).checkApartmentAvailability();
+    console.log(req.body);
+    return success(res, { message: "Apartment is available for booking" });
+  } catch (err) {
+    console.log(err);
+    logger.error("Apartment is unavailable for booking", err);
+    return error(res, { code: err.code, message: err.message });
+  }
+};
+// get all the booked apartments
+exports.getAllBookedApartment = async (req, res) => {
+  try {
+    const apartments = await new Apartment(req.params).getAllBookedApartment();
+    console.log("**********************", apartments);
+    return success(res, "success", apartments);
+  } catch (err) {
+    logger.error("Unable to get all active apartments", err);
     return error(res, { code: err.code, message: err.message });
   }
 };

@@ -9,19 +9,22 @@ const flutterSchema = new Schema(
       type: Number,
       required: true,
     },
-    status: {
+    tx_ref: {
       type: String,
       required: true,
     },
-    tx_ref: {
-        type: String,
-        required: true,
-      },
     transaction_id: {
-        type: Number,
-        required: true,
-      },
-    
+      type: Number,
+      required: true,
+    },
+    booking_id: {
+      type: String,
+      required: true,
+    },
+    status_: {
+      type: String,
+    },
+
     createdAt: {
       type: Date,
       default: Date.now,
