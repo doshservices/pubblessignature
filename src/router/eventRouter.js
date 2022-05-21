@@ -8,8 +8,6 @@ eventRoute
   .route("/events/create-event")
   .post(authenticate, permit([ADMIN_ROLES.ADMIN]), eventController.createEvent);
 
-// get event by id
-eventRoute.route("/events/:id").get(authenticate, eventController.getEventById);
 
 // get all events
 eventRoute.route("/events").get(authenticate, eventController.getAllEvents);
@@ -36,5 +34,9 @@ eventRoute
     permit([ADMIN_ROLES.ADMIN]),
     eventController.deleteEventById
   );
+
+  // get event by id
+eventRoute.route("/events/:id").get(authenticate, eventController.getEventById);
+
 
 module.exports = eventRoute;

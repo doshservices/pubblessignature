@@ -46,6 +46,7 @@ exports.createAdmin = async (req, res) => {
     });
     return success(res, { newUser, token });
   } catch (err) {
+    console.log(err)
     logger.error("Error occurred at signup", err);
     return error(res, { code: err.code, message: err });
   }
@@ -175,7 +176,6 @@ exports.userDashboardData = async (req, res) => {
 exports.getUser = async (req, res) => {
   try {
     const user = await new User(req.params.id).getUser();
-    console.log(user);
     return success(res, { user });
   } catch (err) {
     logger.error("Unable to complete request", err);

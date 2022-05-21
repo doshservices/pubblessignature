@@ -93,7 +93,6 @@ exports.makeApartmentNotAvailable = async (req, res) => {
 // search apartments
 exports.searchApartments = async (req, res) => {
   try {
-    console.log("params is  ", req.query);
     const apartments = await new Apartment(req.query).searchApartments();
     return success(res, { apartments });
   } catch (err) {
@@ -126,7 +125,6 @@ exports.getApartmentsNearYou = async (req, res) => {
 exports.saveApartment = async (req, res) => {
   try {
     req.body["userId"] = req.user._id;
-    // console.log(req.user._id);
     await new Apartment(req.body).saveApartment();
     return success(res, { message: "Apartment Saved Successfully" });
   } catch (err) {
@@ -138,7 +136,6 @@ exports.saveApartment = async (req, res) => {
 exports.checkApartmentAvailability = async (req, res) => {
   try {
     req.body["userId"] = req.user._id;
-    console.log(req.user._id);
     await new Apartment(req.body).checkApartmentAvailability();
     console.log(req.body);
     return success(res, { message: "Apartment is available for booking" });
@@ -152,7 +149,6 @@ exports.checkApartmentAvailability = async (req, res) => {
 exports.getAllBookedApartment = async (req, res) => {
   try {
     const apartments = await new Apartment(req.params).getAllBookedApartment();
-    console.log("**********************", apartments);
     return success(res, "success", apartments);
   } catch (err) {
     logger.error("Unable to get all booked apartments", err);

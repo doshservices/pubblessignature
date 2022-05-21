@@ -103,7 +103,6 @@ class User {
       ["phoneNumber", "email", "password"],
       this.data
     );
-    console.log("i ran", this.data);
     if (!isValid) {
       throwError(messages);
     }
@@ -278,11 +277,14 @@ class User {
       all_booked_apartment: bookedApartment,
       all_available_apartment: availableApartment,
       all_saved_apartments: wishlistedApartment,
+
       all_active_apartments: activeApartments,
     };
 
     return data;
   }
+
+
 }
 
 module.exports = User;

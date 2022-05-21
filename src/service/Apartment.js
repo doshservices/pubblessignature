@@ -117,7 +117,7 @@ class Apartment {
   }
 
   // search apartments
-  async searchApartments() {
+  async searchApartments(query) {
     const {
       state,
       type,

@@ -27,7 +27,7 @@ class Event {
     if (!isValid) {
       throwError(messages);
     }
-    return await new EventSchema(parameters).save();
+    return await new EventSchema(this.data).save();
   }
   // get all events
   async getAllEvents() {
@@ -50,9 +50,29 @@ class Event {
     );
   }
 
-  // update event by id with images
-  async updateEventById() {
-    return updateEvent;
+  // update event by id
+  async updateEventById() {  
+    const { newDetails, oldDetails } = this.data;
+    console.log("i am runninhg", this.data)
+    const updates = Object.keys(newDetails);
+    console.log(update)
+    const allowedUpdates = [
+      "eventName",
+      "description",
+      "eventLocation",
+      "eventCost",
+      "eventCountry",
+      "eventState",
+      "eventDate",
+      "eventTime",
+      "eventImages",
+    ];
+    return await util.performUpdate(
+      updates,
+      newDetails,
+      allowedUpdates,
+      oldDetails
+    );
   }
 
   // delete event by id

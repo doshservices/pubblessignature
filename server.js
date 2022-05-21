@@ -20,6 +20,7 @@ const transactionRouter = require('./src/router/transactionRouter');
 const bookingRouter = require('./src/router/bookingRouter');
 const notificationRouter = require('./src/router/notificationRouter');
 const flutterRouter= require('./src/router/flutterRouter')
+const adminRouter= require('./src/router/adminRouter')
 
 // App Init
 const app = express();
