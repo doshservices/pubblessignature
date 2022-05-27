@@ -117,7 +117,7 @@ class Apartment {
   }
 
   // search apartments
-  async searchApartments(query) {
+  async searchApartments() {
     const {
       state,
       type,
@@ -128,56 +128,80 @@ class Apartment {
       apartment_name,
     } = this.data;
 
-    if (!apartment_name) {
-      let query = {
-        address: address,
-        apartmentCountry: country.toLowerCase(),
-        apartmentState: state.toLowerCase(),
-        typeOfApartment: type.toLowerCase(),
-        isAvailable: true,
-      };
-    }
+    // if (!apartment_name) {
 
-    if (!address) {
-      let query = {
-        apartmentName: apartment_name.toLowerCase(),
-        apartmentCountry: country.toLowerCase(),
-        apartmentState: state.toLowerCase(),
-        typeOfApartment: type.toLowerCase(),
-        isAvailable: true,
-      };
-    }
+    //
+    let query = {
+      $or: [
+        {
+          apartmentName: apartment_name.toLowerCase(),
+        },
+        {
+          address: address,
+        },
+        {
+          apartmentCountry: country.toLowerCase(),
+        },
+        {
+          apartmentState: state.toLowerCase(),
+        },
+        {
+          typeOfApartment: type.toLowerCase(),
+        },
+      ],
+      $and: [
+        {
+          isAvailable: true,
+        },
+      ],
+    };
+    // }
 
-    if (!country) {
-      let query = {
-        apartmentName: apartment_name.toLowerCase(),
-        address: address,
-        apartmentState: state.toLowerCase(),
-        typeOfApartment: type.toLowerCase(),
-        isAvailable: true,
-      };
-    }
+    // if (!address) {
+    //     let query = {
+    //       address: address,
+    //       apartmentName: apartment_name.toLowerCase(),
+    //       apartmentCountry: country.toLowerCase(),
+    //       apartmentState: state.toLowerCase(),
+    //       typeOfApartment: type.toLowerCase(),
+    //       isAvailable: true,
+    //     };
+    //   }
 
-    if (!state) {
-      let query = {
-        apartmentName: apartment_name.toLowerCase(),
-        address: address,
-        apartmentCountry: country.toLowerCase(),
-        typeOfApartment: type.toLowerCase(),
-        isAvailable: true,
-      };
-    }
+    //   if (!country) {
+    //     let query = {
+    //       apartmentCountry: country.toLowerCase(),
+    //       apartmentName: apartment_name.toLowerCase(),
+    //       address: address,
+    //       apartmentState: state.toLowerCase(),
+    //       typeOfApartment: type.toLowerCase(),
+    //        isAvailable: true,
+    //     };
+    //   }
 
-    if (!type) {
-      let query = {
-        apartmentName: apartment_name.toLowerCase(),
-        address: address,
-        apartmentCountry: country.toLowerCase(),
-        apartmentState: state.toLowerCase(),
-        isAvailable: true,
-      };
-    }
+    //   if (!state) {
+    //     let query = {
+    //       apartmentState: state.toLowerCase(),
+    //       apartmentName: apartment_name.toLowerCase(),
+    //       address: address,
+    //       apartmentCountry: country.toLowerCase(),
+    //       typeOfApartment: type.toLowerCase(),
+    //       isAvailable: true,
+    //     };
+    //   }
 
+    //   if (!type) {
+    //     let query = {
+    //       typeOfApartment: type.toLowerCase(),
+    //       apartmentName: apartment_name.toLowerCase(),
+    //       address: address,
+    //       apartmentCountry: country.toLowerCase(),
+    //       apartmentState: state.toLowerCase(),
+    //       isAvailable: true,
+    //     };
+    //   }
+
+    // return ApartmentSchema.find({$or:[query]});
     return ApartmentSchema.find(query);
   }
 
@@ -221,11 +245,13 @@ class Apartment {
     return bookedApartment;
   }
 
-    //get all Available apartments
-    async getAllAvailableApartment() {
-      const availableApartment = await ApartmentSchema.find({ isAvailable: true });
-      return availableApartment;
-    }
+  //get all Available apartments
+  async getAllAvailableApartment() {
+    const availableApartment = await ApartmentSchema.find({
+      isAvailable: true,
+    });
+    return availableApartment;
+  }
 }
 
 module.exports = Apartment;
