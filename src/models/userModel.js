@@ -56,6 +56,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: String,
+      default: "active",
+    },
     token: {
       type: String,
     },

@@ -36,9 +36,18 @@ class User {
   //verify host
   async verifyHost() {
     const { userId } = this.data;
-    const verifyHost = await UserSchema.findOne({ userId: User._id });
+    const verifyHost = await UserSchema.find({ _id: userId });
     verifyHost.isVerified = true;
     return verifyHost;
   }
+
+  //suspend host
+  async suspendHost() {
+  const {userId} = this.data;
+  const suspendHost = await UserSchema.find({ _id: userId });
+  suspendHost.status = "suspended";
+  return suspendHost;
+  // console.log(userId)
+}
 }
 module.exports = User;

@@ -12,12 +12,14 @@ module.exports = class Database {
         useCreateIndex: true,
         useFindAndModify: false,
       });
+      console.log(connection)
 
       if (!connection) {
         throwError('Unable to connect to database', 500);
       }
       logger.info('Database connection successful!');
     } catch (err) {
+      console.log(err)
       logger.error('Database connection failed!');
     }
   }

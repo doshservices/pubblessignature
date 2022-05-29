@@ -29,4 +29,12 @@ adminRoute
     adminController.verifyHost
   );
 
+  adminRoute
+  .route("/admin/suspendhost")
+  .get(
+    authenticate,
+    permit(Object.keys(ADMIN_ROLES)),
+    adminController.suspendHost
+  );
+
   module.exports = adminRoute;

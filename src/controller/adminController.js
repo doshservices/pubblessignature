@@ -29,7 +29,7 @@ exports.getAllBusinessHost = async (req, res) => {
 
 exports.verifyHost = async (req, res) => {
     try {
-      const verifyHost = await new Admin(req.user._id).verifyHost();
+      const verifyHost = await new Admin(req.query).verifyHost();
       return success(res, { status: success, verifyHost });
     } catch (err) {
       logger.error("Unable to verfiy host", err);
@@ -37,3 +37,12 @@ exports.verifyHost = async (req, res) => {
     }
   };
 
+  exports.suspendHost = async (req, res) => {
+    try {
+      const suspendHost = await new Admin(req.query).suspendHost();
+      return success(res, { status: success, suspendHost });
+    } catch (err) {
+      logger.error("Unable to suspend host", err);
+      return error(res, { code: err.code, message: err.message });
+    }
+  }
