@@ -2,9 +2,9 @@
   "name": "booking-backend-service",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=prod node server",
+    "start": "cross-env NODE_ENV=prod node app",
     "dev": "cross-env NODE_ENV=dev nodemon server",
     "test": "cross-env NODE_ENV=test jest",
     "lint": "eslint",

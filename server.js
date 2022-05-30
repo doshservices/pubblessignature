@@ -5,7 +5,7 @@ const morgan = require('morgan');
 
 // Custom Dependencies
 console.log("database is running")
-require('./src/db/mongoose').db().then();
+//require('./src/db/mongoose').db().then();
 require('./src/schedule/cronjob');
 const { logger } = require('./src/utils/logger');
 const { PORT } = require('./src/core/config');
@@ -44,6 +44,5 @@ app.use('/api', bookingRouter);
 app.use('/api', notificationRouter);
 app.use('/api', flutterRouter)
 
-app.listen(PORT, () =>
-  logger.info(`Booking Backend Service Started on port ${PORT}`)
-);
+module.exports = app
+
