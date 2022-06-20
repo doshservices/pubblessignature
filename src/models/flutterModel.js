@@ -21,6 +21,14 @@ const flutterSchema = new Schema(
       type: String,
       required: true,
     },
+    reason: {
+      type: String,
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
     status_: {
       type: String,
     },

@@ -4,7 +4,6 @@ if(process.env.NODE_ENV === "dev") {
 }
 
 if(process.env.NODE_ENV === "prod") {
-  console.log("prod running")
   module.exports = require("../config/production")
 }
 

@@ -11,7 +11,7 @@ const {
   initializePayment,
   verifyPayment,
 } = require("../integration/paystackClient");
-const { initiatePaymentFlutterwave, flutterPaymentCallback} = require('../integration/flutterwave')
+const { flutterWalletCallback, initiateWalletFund} = require('../integration/flutterwave')
 const { TRANSACTION_STATUS, TRANSACTION_TYPE } = require("../utils/constants");
 
 class Wallet {
@@ -118,22 +118,11 @@ class Wallet {
   async fundWallet() {
     const { amount, userId } = this.data;
     const user = await UserSchema.findById(userId);
-    console.log(user)
-    const checkOut = await initiatePaymentFlutterwave(
+    const checkOut = await initiateWalletFund(
       amount,
-      user.email,
-      
+      user,
     );
-    const transactionDetails = {
-      userId: userId,
-      amount: amount,
-      reason: "Fund Wallet",
-      type: TRANSACTION_TYPE.CREDIT,
-      paymentDate: Date.now(),
-      status: TRANSACTION_STATUS.PENDING,
-    };
-    await Transaction.createTransaction(transactionDetails);
-    console.log(checkOut)
+    // console.log(checkOut)
     return  checkOut.data.link;
   }
 

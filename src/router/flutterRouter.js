@@ -10,5 +10,9 @@ flutterRoute
 .route('/flutterResponse')
 .get(Flutter.flutterResponse);
 
+flutterRoute
+.route('/flutterWalletResponse')
+.get(Flutter.flutterWalletResponse);
+
 
 module.exports = flutterRoute

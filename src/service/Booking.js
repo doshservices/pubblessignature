@@ -230,8 +230,6 @@ class Booking {
     } else if (paymentMethod === "FLUTTERWAVE") {
       const amount = booking.bookingAmount;
       console.log(amount);
-
-      console.log("This a test", booking._id, booking.bookingOrderId);
       try {
         let checkOut = await initiatePaymentFlutterwave(
           amount,

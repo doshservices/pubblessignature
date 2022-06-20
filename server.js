@@ -4,7 +4,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 // Custom Dependencies
-console.log("database is running")
 //require('./src/db/mongoose').db().then();
 require('./src/schedule/cronjob');
 const { logger } = require('./src/utils/logger');

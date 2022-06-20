@@ -15,7 +15,6 @@ module.exports = async () => {
       });
 
       if (!connection) {
-        console.log("no connection")
         throwError('Unable to connect to database', 500);
       }
 
