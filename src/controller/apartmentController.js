@@ -137,7 +137,6 @@ exports.checkApartmentAvailability = async (req, res) => {
   try {
     req.body["userId"] = req.user._id;
     await new Apartment(req.body).checkApartmentAvailability();
-    console.log(req.body);
     return success(res, { message: "Apartment is available for booking" });
   } catch (err) {
     console.log(err);

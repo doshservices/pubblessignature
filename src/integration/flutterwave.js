@@ -24,7 +24,7 @@ exports.initiatePaymentFlutterwave = async (
       tx_ref: "PS_" + Math.floor(Math.random() * 100000000 + 1),
       amount: amount,
       currency: "NGN",
-      redirect_url: `${keys.FRONTEND_BASE_URL}/dashboard/bookings/${bookingId}/payment-status?amount=${amount}`,
+      redirect_url: `http://localhost:3000/dashboard/bookings/${bookingId}/payment-status?amount=${amount}`,
       // redirect_url: `${keys.BACKEND_BASE_URL}/flutterResponse?amount=${amount}`,
       // redirect_url: `/google.com/`,
       customer: {

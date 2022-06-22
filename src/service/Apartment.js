@@ -217,8 +217,10 @@ class Apartment {
   //wishlist apartment
   async saveApartment() {
     const { apartmentId, userId } = this.data;
-    const check = ApartmentWishlistSchema.find({ apartmentId, userId });
-    if (check) {
+    // console.log(this.data);
+    const check = await ApartmentWishlistSchema.find({ apartmentId, userId }).countDocuments();
+    // console.log(check);
+    if (check > 0) {
       throwError("Apartment already saved for later");
     } else {
       return ApartmentWishlistSchema(this.data).save();
@@ -228,10 +230,11 @@ class Apartment {
   //check apartment availability
   async checkApartmentAvailability() {
     const { apartmentId } = this.data;
-    const apartmentBooking = await BookingSchema.findOne({
-      apartmentId: apartmentId,
+    const apartment = await ApartmentSchema.findById({
+      _id: apartmentId
     });
-    if (!apartmentBooking.isBooked) {
+    // console.log(apartment.isAvailable);
+    if (!apartment.isAvailable) {
       throwError("Apartment already booked");
       console.log(apartmentBooking.isBooked);
     } else {
