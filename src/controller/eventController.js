@@ -16,7 +16,8 @@ exports.createEvent = async (req, res) => {
 // get event
 exports.getEventById = async (req, res) => {
   try {
-    const event = await new Event(req.params.id).getEventById();
+    console.log("oreeee",req.query.eventId)
+    const event = await new Event(req.query.eventId).getEventById();
     return success(res, { event });
   } catch (err) {
     logger.error("Unable to complete event request", err);
@@ -49,10 +50,9 @@ exports.getEventByLocation = async (req, res) => {
 // update event by id
 exports.updateEventById = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.query.id;
     const data = req.body;
-    const files = req.files;
-    const event = await new Event({ id, data, files }).updateEventById();
+    const event = await new Event({ id, data }).updateEventById();
     return success(res, { event });
   } catch (err) {
     logger.error("Unable to complete event update request", err);

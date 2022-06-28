@@ -3,16 +3,12 @@ const Flutter = require("../integration/flutterwave")
 
 
 flutterRoute
-.route('/verifyFlutterPayment')
-.get(Flutter.flutterPaymentCallback);
-
-flutterRoute
 .route('/flutterResponse')
-.get(Flutter.flutterResponse);
+.post(Flutter.flutterResponse);
 
 flutterRoute
 .route('/flutterWalletResponse')
-.get(Flutter.flutterWalletResponse);
+.post(Flutter.flutterWalletResponse);
 
 
 module.exports = flutterRoute

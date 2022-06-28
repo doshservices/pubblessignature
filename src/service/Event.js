@@ -2,6 +2,7 @@
 const { throwError } = require("../utils/handleErrors");
 const { validateParameters } = require("../utils/util");
 const EventSchema = require("../models/eventModel");
+const util = require("../utils/util");
 
 class Event {
   constructor(data) {
@@ -38,7 +39,8 @@ class Event {
 
   // get event by id
   async getEventById() {
-    return await EventSchema.findById(this.data).orFail(() =>
+    const {eventId} = this.data;
+    return await EventSchema.findById({_id: this.data}).orFail(() =>
       throwError("No event found")
     );
   }
@@ -52,10 +54,13 @@ class Event {
 
   // update event by id
   async updateEventById() {  
-    const { newDetails, oldDetails } = this.data;
+    const { newDetails, id} = this.data;
     console.log("i am runninhg", this.data)
+    const event = await EventSchema.findById(id).orFail(() =>
+      throwError("Event Not Found", 404)
+    );
+    console.log (event)
     const updates = Object.keys(newDetails);
-    console.log(update)
     const allowedUpdates = [
       "eventName",
       "description",
@@ -71,7 +76,7 @@ class Event {
       updates,
       newDetails,
       allowedUpdates,
-      oldDetails
+      event
     );
   }
 

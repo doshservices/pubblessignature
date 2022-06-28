@@ -246,7 +246,7 @@ class Booking {
   }
 
   // async verifyBooking() {
-  //   const { bookingId } = this.data;
+  //   const { bookingId } = this.data; 
 
   //   // verify if the incoming booking id is present in the flutterschema(Payment information wey we save)
   //   const flutterBooking = await FlutterSchema.findOne({

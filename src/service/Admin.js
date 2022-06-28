@@ -36,7 +36,8 @@ class User {
   //verify host
   async verifyHost() {
     const { userId } = this.data;
-    const verifyHost = await UserSchema.find({ _id: userId });
+    const verifyHost = await UserSchema.findById({ _id: userId });
+    console.log(verifyHost)
     verifyHost.isVerified = true;
     return verifyHost;
   }
@@ -44,7 +45,7 @@ class User {
   //suspend host
   async suspendHost() {
   const {userId} = this.data;
-  const suspendHost = await UserSchema.find({ _id: userId });
+  const suspendHost = await UserSchema.findById({ _id: userId });
   suspendHost.status = "suspended";
   return suspendHost;
   // console.log(userId)

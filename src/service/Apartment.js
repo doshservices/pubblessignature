@@ -128,9 +128,7 @@ class Apartment {
       apartment_name,
     } = this.data;
 
-    // if (!apartment_name) {
-
-    //
+  
     let query = {
       $or: [
         {
@@ -155,53 +153,7 @@ class Apartment {
         },
       ],
     };
-    // }
 
-    // if (!address) {
-    //     let query = {
-    //       address: address,
-    //       apartmentName: apartment_name.toLowerCase(),
-    //       apartmentCountry: country.toLowerCase(),
-    //       apartmentState: state.toLowerCase(),
-    //       typeOfApartment: type.toLowerCase(),
-    //       isAvailable: true,
-    //     };
-    //   }
-
-    //   if (!country) {
-    //     let query = {
-    //       apartmentCountry: country.toLowerCase(),
-    //       apartmentName: apartment_name.toLowerCase(),
-    //       address: address,
-    //       apartmentState: state.toLowerCase(),
-    //       typeOfApartment: type.toLowerCase(),
-    //        isAvailable: true,
-    //     };
-    //   }
-
-    //   if (!state) {
-    //     let query = {
-    //       apartmentState: state.toLowerCase(),
-    //       apartmentName: apartment_name.toLowerCase(),
-    //       address: address,
-    //       apartmentCountry: country.toLowerCase(),
-    //       typeOfApartment: type.toLowerCase(),
-    //       isAvailable: true,
-    //     };
-    //   }
-
-    //   if (!type) {
-    //     let query = {
-    //       typeOfApartment: type.toLowerCase(),
-    //       apartmentName: apartment_name.toLowerCase(),
-    //       address: address,
-    //       apartmentCountry: country.toLowerCase(),
-    //       apartmentState: state.toLowerCase(),
-    //       isAvailable: true,
-    //     };
-    //   }
-
-    // return ApartmentSchema.find({$or:[query]});
     return ApartmentSchema.find(query);
   }
 

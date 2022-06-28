@@ -22,7 +22,7 @@ adminRoute
   );
 
   adminRoute
-  .route("/admin/verifyhost")
+  .route("/verifyhost")
   .get(
     authenticate,
     permit(Object.keys(ADMIN_ROLES)),
@@ -30,7 +30,7 @@ adminRoute
   );
 
   adminRoute
-  .route("/admin/suspendhost")
+  .route("/suspendhost")
   .get(
     authenticate,
     permit(Object.keys(ADMIN_ROLES)),
