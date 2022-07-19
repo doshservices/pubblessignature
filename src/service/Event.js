@@ -39,8 +39,8 @@ class Event {
 
   // get event by id
   async getEventById() {
-    const {eventId} = this.data;
-    return await EventSchema.findById({_id: this.data}).orFail(() =>
+    const { eventId } = this.data;
+    return await EventSchema.findById({ _id: this.data }).orFail(() =>
       throwError("No event found")
     );
   }
@@ -53,13 +53,63 @@ class Event {
   }
 
   // update event by id
-  async updateEventById() {  
-    const { newDetails, id} = this.data;
-    console.log("i am runninhg", this.data)
+  // async updateEventById() {
+  //   const { id } = this.data;
+  //  const{ eventName,
+  //       description,
+  //       eventLocation,
+  //       eventCost,
+  //       eventCountry,
+  //       eventState,
+  //       eventDate,
+  //       eventTime,
+  //       eventImages} = this.data;
+  //   const event = await EventSchema.findById(id).orFail(() =>
+  //     throwError("Event Not Found", 404)
+  //   );
+  //   console.log(event);
+  //   const newData = new EventSchema({
+  //       eventName,
+  //       description,
+  //       eventLocation,
+  //       eventCost,
+  //       eventCountry,
+  //       eventState,
+  //       eventDate,
+  //       eventTime,
+  //       eventImages,
+  //   });
+  //   newData.save();
+  //   return res.status(200).json({
+  //     success: true,
+  //     message: "successfully updated",
+  //     newData: newData,
+  //   });
+    // // const updates = Object.keys(newDetails);
+    // // const allowedUpdates = [
+    // //   "eventName",
+    // //   "description",
+    // //   "eventLocation",
+    // //   "eventCost",
+    // //   "eventCountry",
+    // //   "eventState",
+    // //   "eventDate",
+    // //   "eventTime",
+    // //   "eventImages",
+    // // ];
+    // // return await util.performUpdate(
+    // //   updates,
+    // //   newDetails,
+    // //   allowedUpdates,
+    // //   event
+    // // );
+  //}
+  async updateEventById() {
+    const { newDetails, id, userId } = this.data;
     const event = await EventSchema.findById(id).orFail(() =>
-      throwError("Event Not Found", 404)
+      throwError("Apartment Not Found", 404)
     );
-    console.log (event)
+
     const updates = Object.keys(newDetails);
     const allowedUpdates = [
       "eventName",
@@ -72,6 +122,7 @@ class Event {
       "eventTime",
       "eventImages",
     ];
+    
     return await util.performUpdate(
       updates,
       newDetails,
@@ -82,6 +133,8 @@ class Event {
 
   // delete event by id
   async deleteEventById() {
+    const { eventId } = this.data;
+      console.log(this.data)
     return await EventSchema.findByIdAndRemove(this.data).orFail(() =>
       throwError("No event found")
     );

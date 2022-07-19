@@ -19,7 +19,6 @@ const flutterSchema = new Schema(
     },
     booking_id: {
       type: String,
-      required: true,
     },
     reason: {
       type: String,

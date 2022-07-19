@@ -1,4 +1,4 @@
-// /*eslint-disable*/
+/*eslint-disable*/
 var axios = require("axios");
 const keys = require("../core/config");
 const FlutterSchema = require("../models/flutterModel");
@@ -19,7 +19,8 @@ const {
 
 const Transaction = require("../service/Transaction");
 const Notification = require("../service/Notification");
-const { bookingEmail } = require("../utils/sendgrid")
+const  Wallet  = require("../service/Wallet");
+const { bookingEmail } = require("../utils/sendgrid");
 
 
 exports.initiatePaymentFlutterwave = async (
@@ -211,7 +212,7 @@ exports.flutterResponse = async (req, res) => {
       apartmentId: booking.apartmentId._id,
       notificationType: NOTIFICATION_TYPE.BOOKING_CONFIRMED,
     };
-   await Notification.createNotification(
+    await Notification.createNotification(
       notificationDetailsBusinessAndIndividual
     );
 
@@ -259,43 +260,48 @@ exports.flutterResponse = async (req, res) => {
 };
 
 exports.flutterWalletResponse = async (req, res) => {
+  console.log(req)
   const { status, tx_ref, transaction_id } = req.query;
-  flw.Transaction.verify({ id: transaction_id })
-    .then((response) => {
-      // console.log("this is some test",response.data.amount == amount);
-      console.log(response)
 
-      return;
-      if (
-        response.data.status == "successful" &&
-        response.data.currency === "NGN"
-      ) {
-        // things you can save from flutterwave into your schema
-        // let booking_id = null;
-        // let amount = response.data.amount;
-        // let status_ = response.data.status;
-        // let reason = response.data.meta.reason;
-        // let userId = response.data.meta.user_id;
+  const response = await flw.Transaction.verify({ id: transaction_id });
 
-        // console.log(response.data);
 
-        // //kindly save this correctly
-        // const flutterDetails = new FlutterSchema({
-        //   amount,
-        //   status_,
-        //   tx_ref,
-        //   transaction_id,
-        //   booking_id,
-        //   reason,
-        //   userId,
-        // });
-        // flutterDetails.save();
 
-        console.log("Payment Successful");
-      } else {
-        // Inform the customer their payment was unsuccessful
-        console.log("Payment Failed");
-      }
-    })
-    .catch(console.log);
+  if (
+    response.data.status == "successful" &&
+    response.data.currency === "NGN"
+  ) {
+
+
+    let booking_id = null;
+    let amount = response.data.amount;
+    let status_ = response.data.status;
+    let reason = response.data.meta.reason;
+    let userId = response.data.meta.user_id;
+
+    // console.log(response.data);
+
+    //kindly save this correctly
+    const flutterDetails = new FlutterSchema({
+      amount,
+      status_,
+      tx_ref,
+      transaction_id,
+      booking_id,
+      reason,
+      userId,
+    });
+    flutterDetails.save();
+
+
+ const credit  =   await Wallet.creditWallet(amount, userId);
+
+  return credit;
+    
+
+    // console.log("Payment Successful");
+  } else {
+    // Inform the customer their payment was unsuccessful
+    console.log("Payment Failed");
+  }
 };

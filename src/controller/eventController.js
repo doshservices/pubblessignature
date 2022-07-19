@@ -16,7 +16,6 @@ exports.createEvent = async (req, res) => {
 // get event
 exports.getEventById = async (req, res) => {
   try {
-    console.log("oreeee",req.query.eventId)
     const event = await new Event(req.query.eventId).getEventById();
     return success(res, { event });
   } catch (err) {
@@ -51,8 +50,9 @@ exports.getEventByLocation = async (req, res) => {
 exports.updateEventById = async (req, res) => {
   try {
     const id = req.query.id;
-    const data = req.body;
-    const event = await new Event({ id, data }).updateEventById();
+    const newDetails = req.body;
+    const userId = req.user._id;
+    const event = await new Event({ newDetails, id,userId}).updateEventById();
     return success(res, { event });
   } catch (err) {
     logger.error("Unable to complete event update request", err);
@@ -62,8 +62,9 @@ exports.updateEventById = async (req, res) => {
 
 // delete event by id
 exports.deleteEventById = async (req, res) => {
+  const eventId = req.query.id;
   try {
-    await new Event(req.params.id).deleteEventById();
+    await new Event(eventId).deleteEventById();
     return success(res, { message: "Event Deleted Successfully" });
   } catch (err) {
     logger.error("Unable to complete event delete request", err);

@@ -30,7 +30,7 @@ class Wallet {
     );
   }
 
-  async creditWallet(amount, userId) {
+async creditWallet(amount, userId) {
     const userWallet = await WalletSchema.findOne({ userId });
     userWallet.availableBalance += Number(amount);
     return await userWallet.save();

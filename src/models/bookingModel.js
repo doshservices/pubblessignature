@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const { Schema, model } = require("mongoose");
 // const bookingId = require("../models/flutterModel")
 const uniqueValidator = require("mongoose-unique-validator");

@@ -1,4 +1,3 @@
-
 /*eslint-disable*/
 const { Schema, model } = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");

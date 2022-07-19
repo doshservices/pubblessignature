@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const { error, success } = require("../utils/baseController");
 const { logger } = require("../utils/logger");
 const Notification = require("../service/Notification");
