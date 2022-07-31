@@ -2,13 +2,13 @@
 const notificationRoute = require("../core/routerConfig");
 const notificationController = require("../controller/notificationController");
 const { authenticate, permit } = require("../core/userAuth");
-const { USER_TYPE } = require("../utils/constants");
+const {ADMIN_ROLES, USER_TYPE } = require("../utils/constants");
 
 notificationRoute
   .route("/notifications")
   .get(
     authenticate,
-    permit(Object.keys(USER_TYPE)),
+    permit(Object.keys(ADMIN_ROLES)),
     notificationController.getAllUserNotifications
   );
 

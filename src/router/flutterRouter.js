@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const flutterRoute = require("../core/routerConfig");
 const Flutter = require("../integration/flutterwave")
 

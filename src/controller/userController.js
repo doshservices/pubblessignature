@@ -52,15 +52,33 @@ exports.createAdmin = async (req, res) => {
   }
 };
 
+// exports.getAllUser = async (req, res) => {
+//   try {
+//     const users = await new User(req.query).getAllUser();
+//     return success(res, { users });
+//   } catch (err) {
+//     logger.error("Unable to complete request", err);
+//     return error(res, { code: err.code, message: err.message });
+//   }
+// };
+
 exports.getAllUser = async (req, res) => {
   try {
+    console.log(req)
+    
     const users = await User.getAllUser();
-    return success(res, { users });
+    const page = parseInt(req.body.page);
+    const limit = parseInt(req.body.limit);
+    const indexOne = (page - 1) * limit
+    const indexTwo = (page * limit)
+    const result = users.slice(indexOne, indexTwo)
+    return success(res, result );
   } catch (err) {
     logger.error("Unable to complete request", err);
     return error(res, { code: err.code, message: err.message });
   }
 };
+
 
 exports.getUserProfile = async (req, res) => {
   try {

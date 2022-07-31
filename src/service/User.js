@@ -128,6 +128,16 @@ class User {
       .orFail(() => throwError("No event found"));
   }
 
+//   async getAllUser() {
+//     const getAllUser = await UserSchema.find()
+//     const indexOne = (page - 1) * limit
+//     const indexTwo = (page * limit)
+//     const result = getAllUser.slice(indexOne,  indexTwo)
+//     return res.status(200).json({message: "successful", users: result})
+//     .sort({ createdAt: -1 })
+//     .orFail(() => throwError("No user found"));
+// }
+
   async userProfile() {
     return await UserSchema.findById(this.data).orFail(() =>
       throwError("No user found")
